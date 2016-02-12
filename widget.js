@@ -51,6 +51,9 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
     // your changes, try ?forcerefresh=true as a get parameter in your URL.
 
     console.log("test running of " + myWidget.id);
+    
+         $('body').prepend('<div class="zhigh hidden" id="com-chilipeppr-ws-dxf">DXF Import Here</div>');
+
 
     $('body').prepend('<div id="testDivForFlashMessageWidget"></div>');
 
