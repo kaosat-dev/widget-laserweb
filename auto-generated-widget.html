@@ -460,7 +460,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
                 if (info.name.match(/.dxf$/i)) {
                     // this looks like an Eagle brd file, but it's binary
                     chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dragged in a DXF ", 15 * 1000);
-                    this.open(data, info);
+                   // this.open(data, info);
                     return false;
                 } else {
                     console.log("Didnt get a dxf.");
@@ -474,70 +474,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
         onDragLeave: function () {
             console.log("onDragLeave");
             $('#com-chilipeppr-widget-dxf').removeClass("panel-primary");
-        },
-        open: function (data, info) {
-            
-            // if we are passed the file data, then use that, 
-            var file;
-            if (data) {
-                console.log("open. loading from passed in data. data.length:", data.length, "info:", info);
-                file = data;
-                this.fileInfo = info;
-                $('#com-chilipeppr-widget-dxf .dxf-draghere').addClass("hidden");
-            } 
-            
-            if (file) {
-                
-              
-                chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Opening DXF", "Parsing DXF and generating paths.", 3000, true);
-                // reset main properties
-                this.clear3dViewer();
-                
-                // create board
-                //this.eagle = new EagleCanvas('eagle-canvas');
-                //this.eagle.loadText(file);
-                //this.eagle.setScaleToFit('eagle-main');
-                //this.eagle.setScale(this.eagle.getScale() / 2);
-                //this.eagle.draw();
-                //var that = this;
-                this.draw3d(function() {
-                    console.log("got callback from draw3d");
-                });
-                
-                
-                $('#com-chilipeppr-widget-eagle .btn-eagle-sendgcodetows').prop('disabled', false);
-                console.log("eagle:", this.eagle);
-            } else {
-                console.log("no last file, so not opening");
-            }
-        },
-        draw3d: function (callback) {
-            //  if (!this.is3dViewerReady) {
-            //     var that = this;
-            //     setTimeout(function () {
-            //         if (!that.is3dViewerReady) {
-            //             setTimeout(function () {
-            //                 if (!that.is3dViewerReady) {
-            //                     console.log("giving up on drawing into 3d for Eagle Brd");
-            //                 } else {
-            //                     console.log("ready to draw 3d on 3rd attempt");
-            //                     //that.onDraw3dReady();
-            //                     if (callback) callback();
-            //                 }
-            //             }, 5000);
-            //         } else {
-            //             console.log("ready to draw 3d on 2nd attempt");
-            //             //that.onDraw3dReady();
-            //             if (callback) callback();
-            //         }
-            //     }, 2000);
-            // } else {
-            //     console.log("ready to draw 3d on 1st attempt");
-            //     //this.onDraw3dReady();
-            //     if (callback) callback();
-            // }
-            //   Can kickoff DXF parsing from here (still do the is 3d viewer ready stuff though)
-        },
+        }
 
     }
 });
