@@ -70,7 +70,8 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
     myWidget.init();
     $('#' + myWidget.id).css('margin', '10px');
     $('title').html(myWidget.name);
-
+    
+    
 } /*end_test*/ );
 
 // This is the main definition of your widget. Give it a unique name.
