@@ -343,15 +343,15 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
         },
         setupDragDrop: function () {
             // subscribe to events
-            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
-            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
+            //chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
+            //chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
             // /com-chilipeppr-elem-dragdrop/ondropped
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 9); // default is 10, we do 9 to be higher priority
         },
         dxf: null, // contains the DXF Object
         
-        onDropped: function (data, info) {
-            console.log(" DXF onDropped. len of file:", data.length, "info:", info);
+       // onDropped: function (data, info) {
+        //    console.log(" DXF onDropped. len of file:", data.length, "info:", info);
             // we have the data
             // double check it's a board file, cuz it could be gcode
             //if (data.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i)) {
@@ -376,17 +376,17 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
                 // an Eagle Brd file
                 //return false;
             //} else {
-                if (info.name.match(/.dxf$/i)) {
+          //      if (info.name.match(/.dxf$/i)) {
                     // this looks like an Eagle brd file, but it's binary
-                    chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dragged in a DXF ", 15 * 1000);
-                    console.log(" DXF Found!");
-                    //this.open(data, info);
-                    return false;
-                } else {
-                    console.log("Didnt get a dxf.");
-                }
+         //           chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dragged in a DXF ", 15 * 1000);
+        //            console.log(" DXF Found!");
+        //            //this.open(data, info);
+       //             return false;
+       //         } else {
+        //            console.log("Didnt get a dxf.");
+          //      }
             //}
-        },
+     //   },
       
     }
 });
