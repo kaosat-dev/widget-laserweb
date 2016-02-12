@@ -52,29 +52,18 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
 
     console.log("test running of " + myWidget.id);
     
-         $('body').prepend('<div class="zhigh hidden" id="com-chilipeppr-ws-dxf">DXF Import Here</div>');
+    $('body').prepend('<div id="3dviewer"></div>');
+    
+    $('body').append('<div id="testDivForFlashMessageWidget"></div>');
 
-
-    $('body').prepend('<div id="testDivForFlashMessageWidget"></div>');
-
-    chilipeppr.load(
-        "#testDivForFlashMessageWidget",
-        "http://fiddle.jshell.net/chilipeppr/90698kax/show/light/",
-        function() {
-            console.log("mycallback got called after loading flash msg module");
-            cprequire(["inline:com-chilipeppr-elem-flashmsg"], function(fm) {
-                //console.log("inside require of " + fm.id);
-                fm.init();
-            });
-        }
-    );
+   
 
     // init my widget
-    myWidget.init();
+    
     $('#' + myWidget.id).css('margin', '10px');
     $('title').html(myWidget.name);
     
-     $('body').prepend('<div id="3dviewer"></div>');
+     
     
      chilipeppr.load("#3dviewer", "https://raw.githubusercontent.com/openhardwarecoza/widget-3dviewer/master/auto-generated-widget.html", function () {
         cprequire(['inline:com-chilipeppr-widget-3dviewer'], function (threed) {
@@ -88,11 +77,12 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
 
             // only init eagle widget once 3d is loaded
             // set doMyOwnDragDrop
-            ew.init(true);
+            //ew.init(true);
+            myWidget.init();
         });
     });
 
-    $('body').prepend('<div id="test-drag-drop"></div>');
+    $('body').append('<div id="test-drag-drop"></div>');
     chilipeppr.load("#test-drag-drop", "http://fiddle.jshell.net/chilipeppr/Z9F6G/show/light/",
 
     function () {
@@ -105,7 +95,7 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
         });
     });
     
-    $('body').prepend('<div id="com-chilipeppr-flash"></div>');
+    $('body').append('<div id="com-chilipeppr-flash"></div>');
     chilipeppr.load("#com-chilipeppr-flash",
         "http://fiddle.jshell.net/chilipeppr/90698kax/show/light/",
 
@@ -116,6 +106,19 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
             fm.init();
         });
     });
+    
+    $('body').append('<div class="zhigh" id="com-chilipeppr-ws-dxf">DXF Import Here</div>');
+     chilipeppr.load(
+        "#testDivForFlashMessageWidget",
+        "http://fiddle.jshell.net/chilipeppr/90698kax/show/light/",
+        function() {
+            console.log("mycallback got called after loading flash msg module");
+            cprequire(["inline:com-chilipeppr-elem-flashmsg"], function(fm) {
+                //console.log("inside require of " + fm.id);
+                fm.init();
+            });
+        }
+    );
 
 } /*end_test*/ );
 
@@ -392,12 +395,13 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
             // /com-chilipeppr-elem-dragdrop/ondropped
-            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 9); // default is 10, we do 9 to be higher priority
+            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 8); // default is 10, we do 9 to be higher priority
         },
         dxf: null, // contains the DXF Object
         
         onDropped: function (data, info) {
-            console.log("onDropped. len of file:", data.length, "info:", info);
+            console.log("DXF onDropped. len of file:", data.length, "info:", info);
+            hilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dropped in a DXF ", 15 * 1000);
             // we have the data
             // double check it's a board file, cuz it could be gcode
             //if (data.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i)) {
