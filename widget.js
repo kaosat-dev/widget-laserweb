@@ -388,23 +388,21 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
         },
         onDragOver: function () {
             console.log("onDragOver");
-            $('#com-chilipeppr-widget-eagle').addClass("panel-primary");
+            $('#com-chilipeppr-widget-dxf').addClass("panel-primary");
         },
         onDragLeave: function () {
             console.log("onDragLeave");
-            $('#com-chilipeppr-widget-eagle').removeClass("panel-primary");
+            $('#com-chilipeppr-widget-dxf').removeClass("panel-primary");
         },
         open: function (data, info) {
             
-            // if we are passed the file data, then use that, otherwise look to 
-            // see if we had one saved from before, i.e. this is a browser reload scenario
-            // and we'd like to show them their recent Eagle BRD
+            // if we are passed the file data, then use that, 
             var file;
             if (data) {
                 console.log("open. loading from passed in data. data.length:", data.length, "info:", info);
                 file = data;
                 this.fileInfo = info;
-                $('#com-chilipeppr-widget-eagle .eagle-draghere').addClass("hidden");
+                $('#com-chilipeppr-widget-dxf .dxf-draghere').addClass("hidden");
             } 
             
             if (file) {
@@ -433,30 +431,31 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             }
         },
         draw3d: function (callback) {
-             if (!this.is3dViewerReady) {
-                var that = this;
-                setTimeout(function () {
-                    if (!that.is3dViewerReady) {
-                        setTimeout(function () {
-                            if (!that.is3dViewerReady) {
-                                console.log("giving up on drawing into 3d for Eagle Brd");
-                            } else {
-                                console.log("ready to draw 3d on 3rd attempt");
-                                //that.onDraw3dReady();
-                                if (callback) callback();
-                            }
-                        }, 5000);
-                    } else {
-                        console.log("ready to draw 3d on 2nd attempt");
-                        //that.onDraw3dReady();
-                        if (callback) callback();
-                    }
-                }, 2000);
-            } else {
-                console.log("ready to draw 3d on 1st attempt");
-                //this.onDraw3dReady();
-                if (callback) callback();
-            }
+            //  if (!this.is3dViewerReady) {
+            //     var that = this;
+            //     setTimeout(function () {
+            //         if (!that.is3dViewerReady) {
+            //             setTimeout(function () {
+            //                 if (!that.is3dViewerReady) {
+            //                     console.log("giving up on drawing into 3d for Eagle Brd");
+            //                 } else {
+            //                     console.log("ready to draw 3d on 3rd attempt");
+            //                     //that.onDraw3dReady();
+            //                     if (callback) callback();
+            //                 }
+            //             }, 5000);
+            //         } else {
+            //             console.log("ready to draw 3d on 2nd attempt");
+            //             //that.onDraw3dReady();
+            //             if (callback) callback();
+            //         }
+            //     }, 2000);
+            // } else {
+            //     console.log("ready to draw 3d on 1st attempt");
+            //     //this.onDraw3dReady();
+            //     if (callback) callback();
+            // }
+            //   Can kickoff DXF parsing from here (still do the is 3d viewer ready stuff though)
         },
 
     }
