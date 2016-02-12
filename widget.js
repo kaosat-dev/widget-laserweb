@@ -343,15 +343,15 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
         },
         setupDragDrop: function () {
             // subscribe to events
-            //chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
-            //chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
+            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
+            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
             // /com-chilipeppr-elem-dragdrop/ondropped
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 9); // default is 10, we do 9 to be higher priority
         },
         dxf: null, // contains the DXF Object
         
-       // onDropped: function (data, info) {
-        //    console.log(" DXF onDropped. len of file:", data.length, "info:", info);
+        onDropped: function (data, info) {
+            console.log("onDropped. len of file:", data.length, "info:", info);
             // we have the data
             // double check it's a board file, cuz it could be gcode
             //if (data.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i)) {
@@ -376,17 +376,88 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
                 // an Eagle Brd file
                 //return false;
             //} else {
-          //      if (info.name.match(/.dxf$/i)) {
+                if (info.name.match(/.dxf$/i)) {
                     // this looks like an Eagle brd file, but it's binary
-         //           chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dragged in a DXF ", 15 * 1000);
-        //            console.log(" DXF Found!");
-        //            //this.open(data, info);
-       //             return false;
-       //         } else {
-        //            console.log("Didnt get a dxf.");
-          //      }
+                    chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dragged in a DXF ", 15 * 1000);
+                    this.open(data, info);
+                    return false;
+                } else {
+                    console.log("Didnt get a dxf.");
+                }
             //}
-     //   },
-      
+        },
+        onDragOver: function () {
+            console.log("onDragOver");
+            $('#com-chilipeppr-widget-eagle').addClass("panel-primary");
+        },
+        onDragLeave: function () {
+            console.log("onDragLeave");
+            $('#com-chilipeppr-widget-eagle').removeClass("panel-primary");
+        },
+        open: function (data, info) {
+            
+            // if we are passed the file data, then use that, otherwise look to 
+            // see if we had one saved from before, i.e. this is a browser reload scenario
+            // and we'd like to show them their recent Eagle BRD
+            var file;
+            if (data) {
+                console.log("open. loading from passed in data. data.length:", data.length, "info:", info);
+                file = data;
+                this.fileInfo = info;
+                $('#com-chilipeppr-widget-eagle .eagle-draghere').addClass("hidden");
+            } 
+            
+            if (file) {
+                
+              
+                chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Opening DXF", "Parsing DXF and generating paths.", 3000, true);
+                // reset main properties
+                this.clear3dViewer();
+                
+                // create board
+                //this.eagle = new EagleCanvas('eagle-canvas');
+                //this.eagle.loadText(file);
+                //this.eagle.setScaleToFit('eagle-main');
+                //this.eagle.setScale(this.eagle.getScale() / 2);
+                //this.eagle.draw();
+                //var that = this;
+                this.draw3d(function() {
+                    console.log("got callback from draw3d");
+                });
+                
+                
+                $('#com-chilipeppr-widget-eagle .btn-eagle-sendgcodetows').prop('disabled', false);
+                console.log("eagle:", this.eagle);
+            } else {
+                console.log("no last file, so not opening");
+            }
+        },
+        draw3d: function (callback) {
+             if (!this.is3dViewerReady) {
+                var that = this;
+                setTimeout(function () {
+                    if (!that.is3dViewerReady) {
+                        setTimeout(function () {
+                            if (!that.is3dViewerReady) {
+                                console.log("giving up on drawing into 3d for Eagle Brd");
+                            } else {
+                                console.log("ready to draw 3d on 3rd attempt");
+                                //that.onDraw3dReady();
+                                if (callback) callback();
+                            }
+                        }, 5000);
+                    } else {
+                        console.log("ready to draw 3d on 2nd attempt");
+                        //that.onDraw3dReady();
+                        if (callback) callback();
+                    }
+                }, 2000);
+            } else {
+                console.log("ready to draw 3d on 1st attempt");
+                //this.onDraw3dReady();
+                if (callback) callback();
+            }
+        },
+
     }
 });
