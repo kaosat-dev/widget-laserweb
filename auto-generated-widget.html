@@ -426,13 +426,13 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
             // /com-chilipeppr-elem-dragdrop/ondropped
-            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 8); // default is 10, we do 9 to be higher priority
+            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDXFDropped, 8); // default is 10, we do 9 to be higher priority
         },
         dxf: null, // contains the DXF Object
         
-        onDropped: function (data, info) {
+        onDXFDropped: function (data, info) {
             console.log("DXF onDropped. len of file:", data.length, "info:", info);
-            hilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dropped in a DXF ", 15 * 1000);
+            chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dropped in a DXF ", 15 * 1000);
             // we have the data
             // double check it's a board file, cuz it could be gcode
             //if (data.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i)) {
