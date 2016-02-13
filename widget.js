@@ -27,14 +27,19 @@ requirejs.config({
         // Example of how to define the key (you make up the key) and the URL
         // Make sure you DO NOT put the .js at the end of the URL
         // SmoothieCharts: '//smoothiecharts.org/smoothie',
+        Three: '//i2dcui.appspot.com/geturl?url=http://threejs.org/build/three.min.js',
+        dxfParse: '//raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/i/dxf/dxf-parser',
+        dxfRender: '//raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/i/dxf/renderer'
     },
     shim: {
+        dxfRender: ['Three', 'dxfParse'],
         // See require.js docs for how to define dependencies that
         // should be loaded before your script/widget.
     }
 });
 
-cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
+cprequire_test(["inline:com-chilipeppr-widget-dxf", "dxfParse", "dxfRender", "Three"], function(myWidget) {
+
 
     // Test this element. This code is auto-removed by the chilipeppr.load()
     // when using this widget in production. So use the cpquire_test to do things
@@ -439,7 +444,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
                 if (info.name.match(/.dxf$/i)) {
                     // this looks like an Eagle brd file, but it's binary
                     chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dragged in a DXF ", 15 * 1000);
-                   // this.open(data, info);
+                    this.open(data, info);
                     return false;
                 } else {
                     console.log("Didnt get a dxf.");
@@ -454,8 +459,18 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             console.log("onDragLeave");
             $('#com-chilipeppr-widget-dxf').removeClass("panel-primary");
         },
+          clear3dViewer: function () {
+            console.log("clearing 3d viewer");
+            chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneclear");
+            //if (this.obj3d) this.obj3d.children = [];            
+            /*
+            this.obj3d.children.forEach(function(obj3d) {
+                chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneremove", obj3d);
+            });
+            */
+            this.is3dViewerReady = true;
+        },
         dxf: null,
-
         open: function (data, info) {
             
             // if we are passed the file data, then use that, otherwise look to 
@@ -501,7 +516,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
                 
                 // create board
                 //this.eagle = new EagleCanvas('eagle-canvas');
-                this.eagle.loadText(file);
+                //this.eagle.loadText(file);
                 //this.eagle.setScaleToFit('eagle-main');
                 //this.eagle.setScale(this.eagle.getScale() / 2);
                 //this.eagle.draw();
@@ -510,7 +525,9 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
                 //    console.log("got callback from draw3d");
                 //}
                 //);
-                
+                var parser2 = new DxfParser();
+                var dxf2 = parser2.parseSync(file);
+			    cadCanvas = new processDXF(dxf2);
                 
                 $('#com-chilipeppr-widget-eagle .btn-eagle-sendgcodetows').prop('disabled', false);
                 console.log("eagle:", this.eagle);
