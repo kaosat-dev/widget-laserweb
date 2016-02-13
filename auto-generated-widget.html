@@ -211,8 +211,20 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
          * All widgets should have an init method. It should be run by the
          * instantiating code like a workspace or a different widget.
          */
-        init: function() {
+        init: function(doMyOwnDragDrop) {
             console.log("DXF Widget starting init.");
+            
+            if (doMyOwnDragDrop) {
+                this.setupDragDrop();
+            } else {
+                // the workspace is doing the drag/drop. this is important
+                // because this code base for this widget is huge and thus
+                // the workspace should handle dragging in BRD files
+                // and once it sees one, it should then load this widget
+                // so that users who don't use ChiliPeppr for BRD files
+                // don't have to load all this insane code
+                
+            }
 
             this.setupUiFromLocalStorage();
             this.btnSetup();
