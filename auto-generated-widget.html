@@ -31,7 +31,7 @@
     //<![CDATA[
 /* global requirejs cprequire cpdefine chilipeppr THREE */
 // Defining the globals above helps Cloud9 not show warnings for those variables
-
+// sacaneAdd();
 // ChiliPeppr Widget/Element Javascript
 
 requirejs.config({
@@ -211,21 +211,15 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
          * All widgets should have an init method. It should be run by the
          * instantiating code like a workspace or a different widget.
          */
-        init: function(doMyOwnDragDrop) {
+        init: function() {
             console.log("DXF Widget starting init.");
             
-            if (doMyOwnDragDrop) {
-                this.setupDragDrop();
-            } else {
-                // the workspace is doing the drag/drop. this is important
-                // because this code base for this widget is huge and thus
-                // the workspace should handle dragging in BRD files
-                // and once it sees one, it should then load this widget
-                // so that users who don't use ChiliPeppr for BRD files
-                // don't have to load all this insane code
-                
-            }
-
+            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
+            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
+            // /com-chilipeppr-elem-dragdrop/ondropped
+            chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 8); // default is 10, we do 9 to be higher priority
+            console.log('DXF Widget: We did do SetupDragDrop...');
+            
             this.setupUiFromLocalStorage();
             this.btnSetup();
             this.forkSetup();
@@ -293,12 +287,14 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
          */
         onHelloBtnClick: function(evt) {
             console.log("saying hello 2 from btn in tab 1");
+            printfromprotoype('We are awesome');
             chilipeppr.publish(
                 '/com-chilipeppr-elem-flashmsg/flashmsg',
                 "Hello 2 Title",
                 "Hello World 2 from Tab 1 from widget " + this.id,
                 2000 /* show for 2 second */
             );
+            
         },
         /**
          * User options are available in this property for reference by your
@@ -439,11 +435,13 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
             // /com-chilipeppr-elem-dragdrop/ondropped
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 8); // default is 10, we do 9 to be higher priority
+            console.log('DXF Widget: We did do SetupDragDrop...');
         },
         dxf: null, // contains the DXF Object
         
         onDropped: function (data, info) {
             console.log("DXF onDropped. len of file:", data.length, "info:", info);
+            console.log('DXF Widget: We did do OnDropped...');
             chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dropped in a DXF ", 15 * 1000);
             // we have the data
             // double check it's a board file, cuz it could be gcode
@@ -486,10 +484,85 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
         onDragLeave: function () {
             console.log("onDragLeave");
             $('#com-chilipeppr-widget-dxf').removeClass("panel-primary");
-        }
+        },
+        dxf: null,
+
+        open: function (data, info) {
+            
+            // if we are passed the file data, then use that, otherwise look to 
+            // see if we had one saved from before, i.e. this is a browser reload scenario
+            // and we'd like to show them their recent Eagle BRD
+            var file;
+            if (data) {
+                console.log("open. loading from passed in data. data.length:", data.length, "info:", info);
+                file = data;
+                this.fileInfo = info;
+                $('#com-chilipeppr-widget-dxf .dxf-draghere').addClass("hidden");
+            } else {
+                
+                // try to retrieve the most recent board file
+                file = localStorage.getItem('com-chilipeppr-widget-dxf-lastDropped');
+                if (file && file.length > 0) {
+                    this.fileInfo = localStorage.getItem('com-chilipeppr-widget-dxf-lastDropped-info');
+                    if (this.fileInfo && this.fileInfo.match(/^{/)) {
+                        this.fileInfo = JSON.parse(this.fileInfo);
+                    }
+                    console.log("open. loading data from localStorage. file.length:", file.length, "info:", this.fileInfo);
+                } else {
+                    // there's no file, just return
+                    return;
+                }
+
+            }
+            
+            if (file) {
+                
+                // make sure this file is an Eagle board
+                //if (!(file.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i))) {
+                //    chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Error Loading Eagle BRD", "It looks like you had a previous Eagle BRD, but it doesn't seem to be the correct format.", 10 * 1000);
+                //    return;
+                //               
+                //}
+
+                chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Opening DXF", "Parsing DXF file.", 3000, true);
+                // reset main properties
+                //this.activeLayer = 'Top';
+                //this.clearEagleBrd();
+                this.clear3dViewer();
+                
+                // create board
+                //this.eagle = new EagleCanvas('eagle-canvas');
+                this.eagle.loadText(file);
+                //this.eagle.setScaleToFit('eagle-main');
+                //this.eagle.setScale(this.eagle.getScale() / 2);
+                //this.eagle.draw();
+                //var that = this;
+                //this.draw3d(function() {
+                //    console.log("got callback from draw3d");
+                //}
+                //);
+                
+                
+                $('#com-chilipeppr-widget-eagle .btn-eagle-sendgcodetows').prop('disabled', false);
+                console.log("eagle:", this.eagle);
+            } else {
+                console.log("no last file, so not opening");
+            }
+        },
 
     }
 });
+
+
+    
+    function printfromprotoype(msg) {
+        console.log(msg);
+    };
+
+
+    
+    
+
     //]]>
     </script>
 
