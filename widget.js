@@ -38,7 +38,7 @@ requirejs.config({
     }
 });
 
-cprequire_test(["inline:com-chilipeppr-widget-dxf", "dxfRender", "Three"], function(myWidget) {
+cprequire_test(["inline:com-chilipeppr-widget-dxf", "dxfParse", "dxfRender", "Three"], function(myWidget) {
 
     // Test this element. This code is auto-removed by the chilipeppr.load()
     // when using this widget in production. So use the cpquire_test to do things
@@ -185,6 +185,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
          * instantiating code like a workspace or a different widget.
          */
         init: function() {
+
             console.log("DXF Widget starting init.");
             
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
@@ -193,10 +194,10 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 8); // default is 10, we do 9 to be higher priority
             console.log('DXF Widget: We did do SetupDragDrop...');
             
+           
             // Init the DXF Parser
-            require(['dxfParse'], function () {
-                 var parser2 = new this.DxfParser();
-            });
+            var parser2 = new this.DxfParser();
+           
             
             this.setupUiFromLocalStorage();
             this.btnSetup();
