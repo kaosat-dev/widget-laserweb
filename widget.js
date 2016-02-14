@@ -27,18 +27,14 @@ requirejs.config({
         // Example of how to define the key (you make up the key) and the URL
         // Make sure you DO NOT put the .js at the end of the URL
         // SmoothieCharts: '//smoothiecharts.org/smoothie',
-        Three: '//i2dcui.appspot.com/geturl?url=http://threejs.org/build/three.min.js',
-        dxfParse: '//raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/i/dxf/dxf-parser',
-        dxfRender: '//raw.githubusercontent.com/openhardwarecoza/LaserWeb/master/i/dxf/renderer'
     },
     shim: {
-        dxfRender: ['Three', 'dxfParse'],
         // See require.js docs for how to define dependencies that
         // should be loaded before your script/widget.
     }
 });
 
-cprequire_test(["inline:com-chilipeppr-widget-dxf", "dxfParse", "dxfRender", "Three"], function(myWidget) {
+cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
 
     // Test this element. This code is auto-removed by the chilipeppr.load()
     // when using this widget in production. So use the cpquire_test to do things
@@ -196,7 +192,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             
            
             // Init the DXF Parser
-            var parser2 = new this.DxfParser();
+            //var parser2 = new this.DxfParser();
            
             
             this.setupUiFromLocalStorage();
@@ -204,6 +200,8 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             this.forkSetup();
 
             console.log("DXF Widget finished init");
+            
+            window.sceneAdd = this.sceneAdd;
         },
         /**
          * Call this method from init to setup all the buttons when this widget
@@ -530,8 +528,10 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
                 //    console.log("got callback from draw3d");
                 //}
                 //);
+                window.sceneAdd = this.sceneAdd;
                 var parser2 = new window.DxfParser();
                 var dxf2 = parser2.parseSync(file);
+                console.log("Setup DXFParser")
 			    cadCanvas = new processDXF(dxf2);
                 
                 $('#com-chilipeppr-widget-eagle .btn-eagle-sendgcodetows').prop('disabled', false);

@@ -75,6 +75,7 @@ THREE.BulgeGeometry.prototype = Object.create( THREE.Geometry.prototype );
  * @constructor
  */
 function processDXF(data) {
+  console.log("Inside Processdxf");
   console.log(data);
   var i, entity;
 
@@ -165,9 +166,9 @@ function drawLine(entity, data) {
   // }
 
   line = new THREE.Line(geometry, material);
-  line.translateX(laserxmax /2 * -1);
-  line.translateY(laserymax /2 * -1);
-  scene.add(line);
+  //line.translateX(laserxmax /2 * -1);
+  //line.translateY(laserymax /2 * -1);
+  window.sceneAdd(line);
 }
 
 function drawCircle(entity, data) {
@@ -196,9 +197,9 @@ console.log('Start Angle: '+entity.startAngleDeg+', End Angle: '+entity.endAngle
   circle.position.x = entity.center.x;
   circle.position.y = entity.center.y;
   circle.position.z = entity.center.z;
-  circle.translateX(laserxmax /2 * -1);
-  circle.translateY(laserymax /2 * -1);
-  scene.add(circle);
+  //circle.translateX(laserxmax /2 * -1);
+  //circle.translateY(laserymax /2 * -1);
+   window.sceneAdd(circle);
 }
 
 function drawSolid(entity, data) {
@@ -232,10 +233,10 @@ function drawSolid(entity, data) {
 
   mesh = new THREE.Mesh(geometry, material);
 
-  mesh.translateX(laserxmax /2 * -1);
-  mesh.translateY(laserymax /2 * -1);
+  //mesh.translateX(laserxmax /2 * -1);
+  //mesh.translateY(laserymax /2 * -1);
 
-  scene.add(mesh);
+   window.sceneAdd(mesh);
 }
 
 function drawText(entity, data) {
@@ -250,10 +251,10 @@ function drawText(entity, data) {
   text.position.y = entity.startPoint.y;
   text.position.z = entity.startPoint.z;
 
-  text.translateX(laserxmax /2 * -1);
-  text.translateY(laserymax /2 * -1);
+  //text.translateX(laserxmax /2 * -1);
+  //text.translateY(laserymax /2 * -1);
 
-  scene.add(text);
+   sceneAdd(text);
 }
 
 function drawPoint(entity, data) {
@@ -279,10 +280,10 @@ function drawPoint(entity, data) {
   material = new THREE.PointCloudMaterial( { size: 0.05, vertexColors: THREE.VertexColors } );
   point = new THREE.PointCloud(geometry, material);
 
-  point.translateX(laserxmax /2 * -1);
-  point.translateY(laserymax /2 * -1);
+  //point.translateX(laserxmax /2 * -1);
+  //point.translateY(laserymax /2 * -1);
 
-  scene.add(point);
+  window.sceneAdd(point);
 }
 
 //function getColor(entity, data) {
