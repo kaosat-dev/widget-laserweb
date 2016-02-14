@@ -122,7 +122,6 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
             // only init eagle widget once 3d is loaded
             // set doMyOwnDragDrop
             //ew.init(true);
-            window.sceneAdd = this.sceneAdd;
             myWidget.init();
         });
     });
@@ -237,19 +236,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             // /com-chilipeppr-elem-dragdrop/ondropped
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 8); // default is 10, we do 9 to be higher priority
             console.log('DXF Widget: We did do SetupDragDrop...');
-           
-            window.DxfParser = this.DxfParser; 
-           
-            // Init the DXF Parser
-            try {
-                var parser2 = new DxfParser()
-            }
-            catch(err) {
-                 console.error('Could not instantiate DxfParser ... failing ... hating RequireJS');
-                 console.error(err.message);
-            }
-           
-            
+
             this.setupUiFromLocalStorage();
             this.btnSetup();
             this.forkSetup();
@@ -583,14 +570,12 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //    console.log("got callback from draw3d");
                 //}
                 //);
-                window.sceneAdd = this.sceneAdd;
-                var parser2 = new window.DxfParser();
+                var parser2 = new DxfParser();
                 var dxf2 = parser2.parseSync(file);
                 console.log("Setup DXFParser")
-			    cadCanvas = new processDXF(dxf2);
+			    //cadCanvas = new processDXF(dxf2);
                 
-                $('#com-chilipeppr-widget-eagle .btn-eagle-sendgcodetows').prop('disabled', false);
-                console.log("eagle:", this.eagle);
+                $('#com-chilipeppr-widget-dxf .btn-dxf-sendgcodetows').prop('disabled', false);
             } else {
                 console.log("no last file, so not opening");
             }
