@@ -539,7 +539,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //    console.log("got callback from draw3d");
                 //}
                 //);
-                var parser2 = new DxfParser();
+                //var parser2 = new window.DxfParser();
                 var dxf2 = parser2.parseSync(file);
                 console.log("Setup DXFParser")
 			    //cadCanvas = new processDXF(dxf2);
