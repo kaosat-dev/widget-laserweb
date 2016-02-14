@@ -27,10 +27,23 @@ requirejs.config({
         // Example of how to define the key (you make up the key) and the URL
         // Make sure you DO NOT put the .js at the end of the URL
         // SmoothieCharts: '//smoothiecharts.org/smoothie',
+        // Don't put .js at end of URL (except when passing thru CP geturl proxy)
+        Three: '//i2dcui.appspot.com/geturl?url=http://threejs.org/build/three.min.js',
+        ThreeTextGeometry: '//i2dcui.appspot.com/js/three/TextGeometry',
+        ThreeFontUtils: '//i2dcui.appspot.com/js/three/FontUtils',
+        ThreeHelvetiker: '//i2dcui.appspot.com/js/three/threehelvetiker',
+        Clipper: '//i2dcui.appspot.com/js/clipper/clipper_unminified',
+        dxfParser: '//widget-laserweb-openhardwarecoza.c9users.io/dxf-parser',
+        dxfRender: '//widget-laserweb-openhardwarecoza.c9users.io/renderer',
     },
     shim: {
         // See require.js docs for how to define dependencies that
         // should be loaded before your script/widget.
+        ThreeTextGeometry: ['Three'],
+        ThreeFontUtils: ['Three', 'ThreeTextGeometry'],
+        ThreeHelvetiker: ['Three', 'ThreeTextGeometry', 'ThreeFontUtils'],
+        dxfRender: ['Three', 'ThreeTextGeometry', 'ThreeFontUtils', 'ThreeHelvetiker'],
+        dxfParser: ['Three', 'ThreeTextGeometry', 'ThreeFontUtils', 'ThreeHelvetiker', 'dxfRender'],
     }
 });
 
@@ -78,6 +91,7 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
             // only init eagle widget once 3d is loaded
             // set doMyOwnDragDrop
             //ew.init(true);
+            window.sceneAdd = this.sceneAdd;
             myWidget.init();
         });
     });
@@ -123,7 +137,10 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
 } /*end_test*/ );
 
 // This is the main definition of your widget. Give it a unique name.
-cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other dependencies here */ ], function() {
+
+//// This is the main definition of your widget. Give it a unique name.
+
+cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jqueryuiWidget", "dxfParser" ], function() {
     return {
         /**
          * The ID of the widget. You must define this and make it unique.
@@ -192,7 +209,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             
            
             // Init the DXF Parser
-            //var parser2 = new this.DxfParser();
+            var parser2 = new DxfParser();
            
             
             this.setupUiFromLocalStorage();
@@ -201,7 +218,6 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
 
             console.log("DXF Widget finished init");
             
-            window.sceneAdd = this.sceneAdd;
         },
         /**
          * Call this method from init to setup all the buttons when this widget
@@ -474,6 +490,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
             this.is3dViewerReady = true;
         },
         dxf: null,
+        
         open: function (data, info) {
             
             // if we are passed the file data, then use that, otherwise look to 
@@ -543,13 +560,6 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", /* other depen
 
     }
 });
-
-
-    
-    function printfromprotoype(msg) {
-        console.log(msg);
-    };
-
 
     
     
