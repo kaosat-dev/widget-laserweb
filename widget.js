@@ -201,7 +201,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             console.log("DXF Widget starting init.");
             
             // Addind debug 
-            console.log("our DXF obj is alive: ", ThreeDxf)
+            console.log("our DXF obj is alive: ", dxfParser)
             
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
