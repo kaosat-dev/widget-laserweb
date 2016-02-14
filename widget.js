@@ -200,6 +200,9 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
 
             console.log("DXF Widget starting init.");
             
+            // Addind debug 
+            console.log("our DXF obj is alive: ", DxfParser)
+            
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
             // /com-chilipeppr-elem-dragdrop/ondropped
@@ -539,8 +542,8 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //    console.log("got callback from draw3d");
                 //}
                 //);
-                //var parser2 = new window.DxfParser();
-                var dxf2 = parser2.parseSync(file);
+                var parser2 = new this.DxfParser();
+                var dxf2 = DxfParser.parseSync(file);
                 console.log("Setup DXFParser")
 			    //cadCanvas = new processDXF(dxf2);
                 
