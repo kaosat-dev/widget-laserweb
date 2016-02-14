@@ -170,7 +170,7 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
 
 //// This is the main definition of your widget. Give it a unique name.
 
-cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jqueryuiWidget", "dxfParser" ], function() {
+cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jqueryuiWidget", "dxfParser", "dxfRender" ], function(cp, myclipper, myjqueryui, mydxf) {
     return {
         /**
          * The ID of the widget. You must define this and make it unique.
@@ -224,6 +224,10 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
              '/com-chilipeppr-elem-dragdrop/ondropped': 'We subscribe to this signal at a higher priority to intercept the signal, double check if it is an DXF file and if so, we do not let it propagate by returning false. That way the 3D Viewer, Gcode widget, or other widgets will not get DXF file drag/drop events because they will not know how to interpret them.'
         },
         /**
+         * Contains reference to the dxfparser brought in through cpdefine()
+         */
+        dxfParser: null, 
+        /**
          * All widgets should have an init method. It should be run by the
          * instantiating code like a workspace or a different widget.
          */
@@ -232,7 +236,11 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             console.log("DXF Widget starting init.");
             
             // Addind debug 
-            console.log("our DXF obj is alive: ", dxfParser)
+            console.log("our DXF obj is alive: ", mydxf); //ThreeDxf);
+            var parser = new mydxf();
+            console.log("DXF parser:", parser);
+            this.dxfParser = parser;
+            //var dxf = parser.parseSync(fileReader.result);
             
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
@@ -573,9 +581,10 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //    console.log("got callback from draw3d");
                 //}
                 //);
-                var parser2 = new this.DxfParser();
-                var dxf2 = DxfParser.parseSync(file);
-                console.log("Setup DXFParser")
+                //var parser2 = new DxfParser();
+                //var dxf2 = DxfParser.parseSync(file);
+                var dxf2 = this.dxfParser.parseSync(file);
+                console.log("Setup DXFParser. dxf2:", dxf2);
 			    //cadCanvas = new processDXF(dxf2);
                 
                 $('#com-chilipeppr-widget-dxf .btn-dxf-sendgcodetows').prop('disabled', false);
