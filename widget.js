@@ -206,10 +206,17 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             // /com-chilipeppr-elem-dragdrop/ondropped
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondropped", this, this.onDropped, 8); // default is 10, we do 9 to be higher priority
             console.log('DXF Widget: We did do SetupDragDrop...');
-            
+           
+            window.DxfParser = this.DxfParser; 
            
             // Init the DXF Parser
-            var parser2 = new DxfParser();
+            try {
+                var parser2 = new DxfParser()
+            }
+            catch(err) {
+                 console.error('Could not instantiate DxfParser ... failing ... hating RequireJS');
+                 console.error(err.message);
+            }
            
             
             this.setupUiFromLocalStorage();
