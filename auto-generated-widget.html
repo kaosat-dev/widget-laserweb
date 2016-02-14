@@ -170,7 +170,7 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
 
 //// This is the main definition of your widget. Give it a unique name.
 
-cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jqueryuiWidget", "dxfParser", "dxfRender" ], function(cp, myclipper, myjqueryui, mydxf) {
+cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jqueryuiWidget", "dxfParser", "dxfRender" ], function(cp, myclipper, myjqueryui, mydxf, mydxfrenderer) {
     return {
         /**
          * The ID of the widget. You must define this and make it unique.
@@ -585,7 +585,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //var dxf2 = DxfParser.parseSync(file);
                 var dxf2 = this.dxfParser.parseSync(file);
                 console.log("Setup DXFParser. dxf2:", dxf2);
-			    //cadCanvas = new processDXF(dxf2);
+			   //cadCanvas = new this.processDXF(dxf2);
                 
                 $('#com-chilipeppr-widget-dxf .btn-dxf-sendgcodetows').prop('disabled', false);
             } else {
