@@ -893,7 +893,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
 
                 var numPoints = 1;
 
-                var color = getColor(entity, data);
+                var color = this.getColor(entity, data);
                 var colors = new Float32Array(numPoints * 3);
                 colors[0] = color.r;
                 colors[1] = color.g;
