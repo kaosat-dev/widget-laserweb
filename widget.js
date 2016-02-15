@@ -893,10 +893,10 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             //}
 
             getColor: function(entity, data) {
-                //  var color = entity.color || data.tables.layers[entity.layer].color;
+                //var color = entity.color || data.tables.layers[entity.layer].color;
                 //  if(color === 0xffffff) {
                 //    color = 0x000000;
-                //  }
+                //}
                 return 0x000099;
             },
 
@@ -1042,7 +1042,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
              //this.activeLayer = 'Top';
              //this.clearEagleBrd();
              this.clear3dViewer();
- 
+             
              // create board
              //this.eagle = new EagleCanvas('eagle-canvas');
              //this.eagle.loadText(file);
