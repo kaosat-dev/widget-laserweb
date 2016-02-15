@@ -164,7 +164,19 @@ is only loaded and inlined once into the final ChiliPeppr workspace.
 We are given back a reference to the instantiated singleton so its
 not instantiated more than once. Then we call it's attachTo method
 which creates the full pulldown menu for us and attaches the click
-events.</td></tr><tr valign="top"><td>setupDragDrop</td><td>function</td><td>function () </td></tr><tr valign="top"><td>dxf</td><td>object</td><td></td></tr><tr valign="top"><td>onDropped</td><td>function</td><td>function (data, info) </td></tr><tr valign="top"><td>onDragOver</td><td>function</td><td>function () </td></tr><tr valign="top"><td>onDragLeave</td><td>function</td><td>function () </td></tr><tr valign="top"><td>clear3dViewer</td><td>function</td><td>function () </td></tr><tr valign="top"><td>open</td><td>function</td><td>function (data, info) </td></tr>
+events.</td></tr><tr valign="top"><td>setupDragDrop</td><td>function</td><td>function () </td></tr><tr valign="top"><td>dxf</td><td>object</td><td></td></tr><tr valign="top"><td>onDropped</td><td>function</td><td>function (data, info) </td></tr><tr valign="top"><td>onDragOver</td><td>function</td><td>function () </td></tr><tr valign="top"><td>onDragLeave</td><td>function</td><td>function () </td></tr><tr valign="top"><td>clear3dViewer</td><td>function</td><td>function () </td></tr><tr valign="top"><td>cadCanvas</td><td>object</td><td></td></tr><tr valign="top"><td>mySceneGroup</td><td>object</td><td></td></tr><tr valign="top"><td>sceneReAddMySceneGroup</td><td>function</td><td>function () </td></tr><tr valign="top"><td>sceneRemoveMySceneGroup</td><td>function</td><td>function () </td></tr><tr valign="top"><td>sceneAdd</td><td>function</td><td>function (obj) </td></tr><tr valign="top"><td>sceneRemove</td><td>function</td><td>function (obj) </td></tr><tr valign="top"><td>THREEMathangle2</td><td>function</td><td>function (p1, p2) <br><br>Calculates points for a curve between two points
+<br><br><b>-</b> (startPoint)  the starting point of the curve
+<br><br><b>-</b> (endPoint)  the ending point of the curve
+<br><br><b>-</b> (bulge)  a value indicating how much to curve
+<br><br><b>-</b> (segments)  number of segments between the two given points</td></tr><tr valign="top"><td>THREEMathpolar</td><td>function</td><td>function (point, distance, angle) </td></tr><tr valign="top"><td>THREEBulgeGeometry</td><td>function</td><td>function (startPoint, endPoint, bulge, segments) <br><br>Calculates points for a curve between two points
+<br><br><b>-</b> (startPoint)  the starting point of the curve
+<br><br><b>-</b> (endPoint)  the ending point of the curve
+<br><br><b>-</b> (bulge)  a value indicating how much to curve
+<br><br><b>-</b> (segments)  number of segments between the two given points</td></tr><tr valign="top"><td>processDXF</td><td>function</td><td>function (data) <br><br>Viewer class for a dxf object.*
+<br><br><b>data</b> ({Object})  - the dxf object 
+<br><br><b>width</b> ({number})  - width of the rendering canvas in pixels 
+<br><br><b>}</b> ({Number)  height - height of the rendering canvas in pixels 
+@constructor</td></tr><tr valign="top"><td>drawEntity</td><td>function</td><td>function (entity, data) </td></tr><tr valign="top"><td>drawLine</td><td>function</td><td>function (entity, data) </td></tr><tr valign="top"><td>drawCircle</td><td>function</td><td>function (entity, data) </td></tr><tr valign="top"><td>drawSolid</td><td>function</td><td>function (entity, data) </td></tr><tr valign="top"><td>drawText</td><td>function</td><td>function (entity, data) </td></tr><tr valign="top"><td>drawPoint</td><td>function</td><td>function (entity, data) </td></tr><tr valign="top"><td>getColor</td><td>function</td><td>function (entity, data) </td></tr><tr valign="top"><td>createLineTypeShaders</td><td>function</td><td>function (data) </td></tr><tr valign="top"><td>createDashedLineShader</td><td>function</td><td>function (pattern) </td></tr><tr valign="top"><td>open</td><td>function</td><td>function (data, info) </td></tr>
       </tbody>
   </table>
 

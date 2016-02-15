@@ -64,22 +64,22 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
     // your changes, try ?forcerefresh=true as a get parameter in your URL.
 
     console.log("test running of " + myWidget.id);
-    
+
     $('body').prepend('<div id="3dviewer"></div>');
-    
+
     $('body').append('<div id="testDivForFlashMessageWidget"></div>');
 
-   
+
 
     // init my widget
-    
+
     $('#' + myWidget.id).css('margin', '10px');
     $('title').html(myWidget.name);
-    
-     
-    
-     chilipeppr.load("#3dviewer", "https://raw.githubusercontent.com/openhardwarecoza/widget-3dviewer/master/auto-generated-widget.html", function () {
-        cprequire(['inline:com-chilipeppr-widget-3dviewer'], function (threed) {
+
+
+
+    chilipeppr.load("#3dviewer", "https://raw.githubusercontent.com/openhardwarecoza/widget-3dviewer/master/auto-generated-widget.html", function() {
+        cprequire(['inline:com-chilipeppr-widget-3dviewer'], function(threed) {
             threed.init({
                 doMyOwnDragDrop: false
             });
@@ -98,30 +98,30 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
     $('body').append('<div id="test-drag-drop"></div>');
     chilipeppr.load("#test-drag-drop", "http://fiddle.jshell.net/chilipeppr/Z9F6G/show/light/",
 
-    function () {
-        cprequire(
-        ["inline:com-chilipeppr-elem-dragdrop"],
+        function() {
+            cprequire(
+                ["inline:com-chilipeppr-elem-dragdrop"],
 
-        function (dd) {
-            dd.init();
-            dd.bind("body", null);
+                function(dd) {
+                    dd.init();
+                    dd.bind("body", null);
+                });
         });
-    });
-    
+
     $('body').append('<div id="com-chilipeppr-flash"></div>');
     chilipeppr.load("#com-chilipeppr-flash",
         "http://fiddle.jshell.net/chilipeppr/90698kax/show/light/",
 
-    function () {
-        console.log("mycallback got called after loading flash msg module");
-        cprequire(["inline:com-chilipeppr-elem-flashmsg"], function (fm) {
-            //console.log("inside require of " + fm.id);
-            fm.init();
+        function() {
+            console.log("mycallback got called after loading flash msg module");
+            cprequire(["inline:com-chilipeppr-elem-flashmsg"], function(fm) {
+                //console.log("inside require of " + fm.id);
+                fm.init();
+            });
         });
-    });
-    
+
     $('body').append('<div class="zhigh" id="com-chilipeppr-ws-dxf">DXF Import Here</div>');
-     chilipeppr.load(
+    chilipeppr.load(
         "#testDivForFlashMessageWidget",
         "http://fiddle.jshell.net/chilipeppr/90698kax/show/light/",
         function() {
@@ -139,7 +139,7 @@ cprequire_test(["inline:com-chilipeppr-widget-dxf"], function(myWidget) {
 
 //// This is the main definition of your widget. Give it a unique name.
 
-cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jqueryuiWidget", "dxfParser", "dxfRender" ], function(cp, myclipper, myjqueryui, mydxf, mydxfrenderer) {
+cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jqueryuiWidget", "dxfParser", "dxfRender"], function(cp, myclipper, myjqueryui, mydxf, mydxfrenderer) {
     return {
         /**
          * The ID of the widget. You must define this and make it unique.
@@ -147,10 +147,10 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         id: "com-chilipeppr-widget-dxf", // Make the id the same as the cpdefine id
         name: "Widget /DXF", // The descriptive name of your widget.
         desc: "DXF Import.", // A description of what your widget does
-        url: "(auto fill by runme.js)",       // The final URL of the working widget as a single HTML file with CSS and Javascript inlined. You can let runme.js auto fill this if you are using Cloud9.
+        url: "(auto fill by runme.js)", // The final URL of the working widget as a single HTML file with CSS and Javascript inlined. You can let runme.js auto fill this if you are using Cloud9.
         fiddleurl: "(auto fill by runme.js)", // The edit URL. This can be auto-filled by runme.js in Cloud9 if you'd like, or just define it on your own to help people know where they can edit/fork your widget
         githuburl: "(auto fill by runme.js)", // The backing github repo
-        testurl: "(auto fill by runme.js)",   // The standalone working widget so can view it working by itself
+        testurl: "(auto fill by runme.js)", // The standalone working widget so can view it working by itself
         /**
          * Define pubsub signals below. These are basically ChiliPeppr's event system.
          * ChiliPeppr uses amplify.js's pubsub system so please refer to docs at
@@ -190,12 +190,12 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             // Define a key:value pair here as strings to document what signals you subscribe to
             // that are owned by foreign/other widgets.
             // '/com-chilipeppr-elem-dragdrop/ondropped': 'Example: We subscribe to this signal at a higher priority to intercept the signal. We do not let it propagate by returning false.'
-             '/com-chilipeppr-elem-dragdrop/ondropped': 'We subscribe to this signal at a higher priority to intercept the signal, double check if it is an DXF file and if so, we do not let it propagate by returning false. That way the 3D Viewer, Gcode widget, or other widgets will not get DXF file drag/drop events because they will not know how to interpret them.'
+            '/com-chilipeppr-elem-dragdrop/ondropped': 'We subscribe to this signal at a higher priority to intercept the signal, double check if it is an DXF file and if so, we do not let it propagate by returning false. That way the 3D Viewer, Gcode widget, or other widgets will not get DXF file drag/drop events because they will not know how to interpret them.'
         },
         /**
          * Contains reference to the dxfparser brought in through cpdefine()
          */
-        dxfParser: null, 
+        dxfParser: null,
         /**
          * All widgets should have an init method. It should be run by the
          * instantiating code like a workspace or a different widget.
@@ -203,14 +203,21 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         init: function() {
 
             console.log("DXF Widget starting init.");
-            
+
             // Addind debug 
             console.log("our DXF obj is alive: ", mydxf); //ThreeDxf);
             var parser = new mydxf();
             console.log("DXF parser:", parser);
             this.dxfParser = parser;
+
+            console.log("DXF renderer:", mydxfrenderer);
+            //var dxfrenderer = new mydxfrenderer();
+            //console.log("DXF renderer:", dxfrenderer);
+            //this.dxfRender = dxfrenderer;
+
+
             //var dxf = parser.parseSync(fileReader.result);
-            
+
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
             // /com-chilipeppr-elem-dragdrop/ondropped
@@ -222,7 +229,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             this.forkSetup();
 
             console.log("DXF Widget finished init");
-            
+
         },
         /**
          * Call this method from init to setup all the buttons when this widget
@@ -292,7 +299,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 "Hello World 2 from Tab 1 from widget " + this.id,
                 2000 /* show for 2 second */
             );
-            
+
         },
         /**
          * User options are available in this property for reference by your
@@ -427,7 +434,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             });
 
         },
-        setupDragDrop: function () {
+        setupDragDrop: function() {
             // subscribe to events
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", this, this.onDragOver);
             chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", this, this.onDragLeave);
@@ -436,16 +443,15 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             console.log('DXF Widget: We did do SetupDragDrop...');
         },
         dxf: null, // contains the DXF Object
-        
-        onDropped: function (data, info) {
+        onDropped: function(data, info) {
             console.log("DXF onDropped. len of file:", data.length, "info:", info);
             console.log('DXF Widget: We did do OnDropped...');
-            chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dropped in a DXF ", 15 * 1000);
+            chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dropped in a DXF ", 1000);
             // we have the data
             // double check it's a board file, cuz it could be gcode
             //if (data.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i)) {
 
-                // check that there's a board tag
+            // check that there's a board tag
             //    if (data.match(/<board>/i)) {
             //        console.log("we have an eagle board file!");
             //        this.colorSignal = 9249571;
@@ -460,30 +466,31 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             //        chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "Looks like you dragged in an Eagle CAD file, but it contains no board tag. You may have dragged in a schematic instead. Please retry with a valid board file.");
             //   }
 
-                // now, we need to return false so no other widgets see this
-                // drag/drop event because they won't know how to handle
-                // an Eagle Brd file
-                //return false;
+            // now, we need to return false so no other widgets see this
+            // drag/drop event because they won't know how to handle
+            // an Eagle Brd file
+            //return false;
             //} else {
-                if (info.name.match(/.dxf$/i)) {
-                    // this looks like an Eagle brd file, but it's binary
-                    chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dragged in a DXF ", 15 * 1000);
-                    this.open(data, info);
-                    return false;
-                } else {
-                    console.log("Didnt get a dxf.");
-                }
+            if (info.name.match(/.dxf$/i)) {
+                // this looks like an Eagle brd file, but it's binary
+                chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Found", "File matched as *.dxf ", 1000);
+                this.open(data, info);
+                return false;
+            }
+            else {
+                console.log("Didnt get a dxf.");
+            }
             //}
         },
-        onDragOver: function () {
+        onDragOver: function() {
             console.log("onDragOver");
             $('#com-chilipeppr-widget-dxf').addClass("panel-primary");
         },
-        onDragLeave: function () {
+        onDragLeave: function() {
             console.log("onDragLeave");
             $('#com-chilipeppr-widget-dxf').removeClass("panel-primary");
         },
-          clear3dViewer: function () {
+        clear3dViewer: function() {
             console.log("clearing 3d viewer");
             chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneclear");
             //if (this.obj3d) this.obj3d.children = [];            
@@ -495,75 +502,561 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             this.is3dViewerReady = true;
         },
         dxf: null,
-        
-        open: function (data, info) {
+        cadCanvas: null,
+        mySceneGroup: null,
+        sceneReAddMySceneGroup: function() {
+            if (this.obj3d && this.mySceneGroup) {
+                this.obj3d.add(this.mySceneGroup);
+            }
+            this.obj3dmeta.widget.wakeAnimate();
+        },
+        sceneRemoveMySceneGroup: function() {
+            if (this.obj3d && this.mySceneGroup) {
+                this.obj3d.remove(this.mySceneGroup);
+            }
+            this.obj3dmeta.widget.wakeAnimate();
+        },
+        sceneAdd: function (obj) {
+            //chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneadd", obj);
             
-            // if we are passed the file data, then use that, otherwise look to 
-            // see if we had one saved from before, i.e. this is a browser reload scenario
-            // and we'd like to show them their recent Eagle BRD
-            var file;
-            if (data) {
-                console.log("open. loading from passed in data. data.length:", data.length, "info:", info);
-                file = data;
-                this.fileInfo = info;
-                $('#com-chilipeppr-widget-dxf .dxf-draghere').addClass("hidden");
-            } else {
-                
-                // try to retrieve the most recent board file
-                file = localStorage.getItem('com-chilipeppr-widget-dxf-lastDropped');
-                if (file && file.length > 0) {
-                    this.fileInfo = localStorage.getItem('com-chilipeppr-widget-dxf-lastDropped-info');
-                    if (this.fileInfo && this.fileInfo.match(/^{/)) {
-                        this.fileInfo = JSON.parse(this.fileInfo);
+            // this method of adding puts us in the object that contains rendered Gcode
+            // that's one option, but when we send gcode to workspace we get overwritten
+            // then
+            //this.obj3d.add(obj);
+            
+            // let's add our Eagle BRD content outside the scope of the Gcode content
+            // so that we have it stay while the Gcode 3D Viewer still functions
+            if (this.mySceneGroup == null) {
+                this.mySceneGroup = new THREE.Group();
+                this.obj3d.add(this.mySceneGroup);
+            }
+            this.mySceneGroup.add(obj);
+            //this.obj3dmeta.scene.add(obj);
+            
+            this.obj3dmeta.widget.wakeAnimate();
+        },
+        sceneRemove: function (obj) {
+            //chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneremove", obj);
+            //this.obj3d.remove(obj);
+            //this.obj3dmeta.scene.remove(obj);
+            if (this.mySceneGroup != null)
+                this.mySceneGroup.remove(obj);
+            this.obj3dmeta.widget.wakeAnimate();
+        },
+        
+        /**
+         * Calculates points for a curve between two points
+         * @param startPoint - the starting point of the curve
+         * @param endPoint - the ending point of the curve
+         * @param bulge - a value indicating how much to curve
+         * @param segments - number of segments between the two given points
+         */
+         THREEMathangle2: function(p1, p2) {
+             var v1 = new THREE.Vector2(p1.x, p1.y);
+             var v2 = new THREE.Vector2(p2.x, p2.y);
+             v2.sub(v1); // sets v2 to be our chord
+             v2.normalize(); // normalize because cos(theta) =
+             // if(v2.y < 0) return Math.PI + (Math.PI - Math.acos(v2.x));
+             if (v2.y < 0) return -Math.acos(v2.x);
+             return Math.acos(v2.x);
+         },
+         
+         
+         THREEMathpolar: function(point, distance, angle) {
+             var result = {};
+             result.x = point.x + distance * Math.cos(angle);
+             result.y = point.y + distance * Math.sin(angle);
+             return result;
+         },/**
+          * Calculates points for a curve between two points
+          * @param startPoint - the starting point of the curve
+          * @param endPoint - the ending point of the curve
+          * @param bulge - a value indicating how much to curve
+          * @param segments - number of segments between the two given points
+          */
+         THREEBulgeGeometry: function(startPoint, endPoint, bulge, segments) {
+         
+                 var vertex, i,
+                     center, p0, p1, angle,
+                     radius, startAngle,
+                     thetaAngle;
+         
+                 THREE.Geometry.call(this);
+         
+                 this.startPoint = p0 = startPoint ? new THREE.Vector2(startPoint.x, startPoint.y) : new THREE.Vector2(0, 0);
+                 this.endPoint = p1 = endPoint ? new THREE.Vector2(endPoint.x, endPoint.y) : new THREE.Vector2(1, 0);
+                 this.bulge = bulge = bulge || 1;
+         
+                 angle = 4 * Math.atan(bulge);
+                 radius = p0.distanceTo(p1) / 2 / Math.sin(angle / 2);
+                 center = THREEMathpolar(startPoint, radius, THREEMathangle2(p0, p1) + (Math.PI / 2 - angle / 2));
+         
+                 this.segments = segments = segments || Math.max(Math.abs(Math.ceil(angle / (Math.PI / 18))), 6); // By default want a segment roughly every 10 degrees
+                 startAngle = THREEMathangle2(center, p0);
+                 thetaAngle = angle / segments;
+         
+         
+                 this.vertices.push(new THREE.Vector3(p0.x, p0.y, 0));
+         
+                 for (i = 1; i <= segments - 1; i++) {
+         
+                     vertex = THREEMathpolar(center, Math.abs(radius), startAngle + thetaAngle * i);
+         
+                     this.vertices.push(new THREE.Vector3(vertex.x, vertex.y, 0));
+         
+                 }
+         
+             },
+         
+             //THREEBulgeGeometryprototype = Object.create(THREE.Geometry.prototype),
+         
+             /**
+              * Viewer class for a dxf object.
+              * @param {Object} data - the dxf object
+              * @param {Number} width - width of the rendering canvas in pixels
+              * @param {Number} height - height of the rendering canvas in pixels
+              * @constructor
+              */
+              
+              
+        /**
+        * Viewer class for a dxf object.*
+        * @param {Object} data - the dxf object 
+        * @param {number} width - width of the rendering canvas in pixels 
+        * @param {Number } height - height of the rendering canvas in pixels 
+        * @constructor */
+
+        processDXF: function(data) {
+            console.log("Inside Processdxf: ", data);
+            //console.log(" If I am right this is the one running now - from renderer.js pulled in via requirejs "); // want to see it clearly 
+            var i, entity;
+
+            for (i = 0; i < data.entities.length; i++) {
+                entity = data.entities[i];
+
+                if (entity.type === 'DIMENSION') {
+                    if (entity.block) {
+                        var block = data.blocks[entity.block];
+                        for (j = 0; j < block.entities.length; j++) {
+                            drawEntity(block.entities[j], data);
+                            //console.log('Sending DXF data to drawEntity function...');
+                        }
                     }
-                    console.log("open. loading data from localStorage. file.length:", file.length, "info:", this.fileInfo);
-                } else {
-                    // there's no file, just return
-                    return;
+                    else {
+                        console.log('WARNING: No block for DIMENSION entity');
+                    }
+                }
+                else {
+                    drawEntity(entity, data);
+                    //console.log("Running drawEntity for ", entity, " which is ", data);
+                }
+            }
+        },  
+
+            drawEntity: function(entity, data) {
+                console.log("inside drawEntity function now to process Entity: ", entity);
+
+                if (entity.type === 'CIRCLE' || entity.type === 'ARC') {
+                    drawCircle(entity, data);
+                }
+                else if (entity.type === 'LWPOLYLINE' || entity.type === 'LWPOLYLINE' || entity.type === 'LINE') {
+                    drawLine(entity, data);
+                }
+                else if (entity.type === 'TEXT') {
+                    drawText(entity, data);
+                }
+                else if (entity.type === 'SOLID') {
+                    drawSolid(entity, data);
+                }
+                else if (entity.type === 'POINT') {
+                    drawPoint(entity, data);
+                }
+            },
+
+            drawLine: function(entity, data) {
+                var geometry = new THREE.Geometry(),
+                    color = getColor(entity, data),
+                    material, lineType, vertex, startPoint, endPoint, bulgeGeometry,
+                    bulge, i, line;
+
+                // create geometry
+                for (i = 0; i < entity.vertices.length; i++) {
+
+                    if (entity.vertices[i].bulge) {
+                        bulge = entity.vertices[i].bulge;
+                        startPoint = entity.vertices[i];
+                        endPoint = i + 1 < entity.vertices.length ? entity.vertices[i + 1] : geometry.vertices[0];
+
+                        bulgeGeometry = new THREE.BulgeGeometry(startPoint, endPoint, bulge);
+
+                        geometry.vertices.push.apply(geometry.vertices, bulgeGeometry.vertices);
+                    }
+                    else {
+                        vertex = entity.vertices[i];
+                        geometry.vertices.push(new THREE.Vector3(vertex.x, vertex.y, 0));
+                    }
+
+                }
+                if (entity.shape) geometry.vertices.push(geometry.vertices[0]);
+
+
+                // set material
+                //if(entity.lineType) {
+                //  lineType = data.tables.lineTypes[entity.lineType];
+                //}
+
+                if (lineType && lineType.pattern && lineType.pattern.length !== 0) {
+                    material = new THREE.LineDashedMaterial({
+                        color: color,
+                        gapSize: 4,
+                        dashSize: 4
+                    });
+                }
+                else {
+                    material = new THREE.LineBasicMaterial({
+                        linewidth: 1,
+                        color: color
+                    });
                 }
 
-            }
+                // if(lineType && lineType.pattern && lineType.pattern.length !== 0) {
+
+                //           geometry.computeLineDistances();
+
+                //           // Ugly hack to add diffuse to this. Maybe copy the uniforms object so we
+                //           // don't add diffuse to a material.
+                //           lineType.material.uniforms.diffuse = { type: 'c', value: new THREE.Color(color) };
+
+                // 	material = new THREE.ShaderMaterial({
+                // 		uniforms: lineType.material.uniforms,
+                // 		vertexShader: lineType.material.vertexShader,
+                // 		fragmentShader: lineType.material.fragmentShader
+                // 	});
+                // }else {
+                // 	material = new THREE.LineBasicMaterial({ linewidth: 1, color: color });
+                // }
+
+                line = new THREE.Line(geometry, material);
+                //line.translateX(laserxmax /2 * -1);
+                //line.translateY(laserymax /2 * -1);
+                this.sceneAdd(line);
+            },
+
+            drawCircle: function(entity, data) {
+
+                // Laserweb - calc and draw gcode
+                var radius = entity.radius;
+                console.log('Radius:' + radius + ' and Center ' + entity.center.x + ',' + entity.center.y + ',' + entity.center.z + ',\n'); // Radius:220 and Center 0,0,0,
+                var arcTotalDeg = entity.startAngleDeg - entity.endAngleDeg;
+                console.log('Start Angle: ' + entity.startAngleDeg + ', End Angle: ' + entity.endAngleDeg + ', thus spanning ' + arcTotalDeg + 'deg');
+
+                // Do some math here, to determine starting point (using center, Radius and start angle?)
+                // Do some math here, to determine starting point (using  center, Radius and End angle?)
+                // Do some math here, to draw line segments (sections spaced radius away from center, from start point to end point (lengh of segment is number of segments divide by arcTotalDeg)?)
+                // Write that to GCODE
+                // end Laserweb
+
+                // Draw it since its cool to see (note this is a straigh three.js view of it, not via gcode.  Can be used in the Cutting Params view by coloring object/layers to change params)
+                var geometry, material, circle;
+
+                geometry = new THREE.CircleGeometry(entity.radius, 32, entity.startAngle, entity.angleLength);
+                geometry.vertices.shift();
+
+                material = new THREE.LineBasicMaterial({
+                    color: getColor(entity, data)
+                });
+
+                circle = new THREE.Line(geometry, material);
+                circle.position.x = entity.center.x;
+                circle.position.y = entity.center.y;
+                circle.position.z = entity.center.z;
+                //circle.translateX(laserxmax /2 * -1);
+                //circle.translateY(laserymax /2 * -1);
+                this.sceneAdd(circle);
+            },
+
+            drawSolid: function(entity, data) {
+                console.log("inside drawSolid function now...");
+                var material, mesh, solid, verts;
+                geometry = new THREE.Geometry();
+
+                verts = geometry.vertices;
+                verts.push(new THREE.Vector3(entity.points[0].x, entity.points[0].y, entity.points[0].z));
+                verts.push(new THREE.Vector3(entity.points[1].x, entity.points[1].y, entity.points[1].z));
+                verts.push(new THREE.Vector3(entity.points[2].x, entity.points[2].y, entity.points[2].z));
+                verts.push(new THREE.Vector3(entity.points[3].x, entity.points[3].y, entity.points[3].z));
+
+                // Calculate which direction the points are facing (clockwise or counter-clockwise)
+                var vector1 = new THREE.Vector3();
+                var vector2 = new THREE.Vector3();
+                vector1.subVectors(verts[1], verts[0]);
+                vector2.subVectors(verts[2], verts[0]);
+                vector1.cross(vector2);
+
+                // If z < 0 then we must draw these in reverse order
+                if (vector1.z < 0) {
+                    geometry.faces.push(new THREE.Face3(2, 1, 0));
+                    geometry.faces.push(new THREE.Face3(2, 3, 0));
+                }
+                else {
+                    geometry.faces.push(new THREE.Face3(0, 1, 2));
+                    geometry.faces.push(new THREE.Face3(0, 3, 2));
+                }
+
+
+                material = new THREE.MeshBasicMaterial({
+                    color: getColor(entity, data)
+                });
+
+                mesh = new THREE.Mesh(geometry, material);
+
+                //mesh.translateX(laserxmax /2 * -1);
+                //mesh.translateY(laserymax /2 * -1);
+
+                this.sceneAdd(mesh);
+            },
+
+            drawText: function(entity, data) {
+                console.log("inside drawText function now...");
+                var geometry, material, text;
+
+                geometry = new THREE.TextGeometry(entity.text, {
+                    height: 0,
+                    size: entity.textHeight || 12
+                });
+
+                material = new THREE.MeshBasicMaterial({
+                    color: getColor(entity, data)
+                });
+
+                text = new THREE.Mesh(geometry, material);
+                text.position.x = entity.startPoint.x;
+                text.position.y = entity.startPoint.y;
+                text.position.z = entity.startPoint.z;
+
+                //text.translateX(laserxmax /2 * -1);
+                //text.translateY(laserymax /2 * -1);
+
+                this.sceneAdd(text);
+            },
+
+            drawPoint: function(entity, data) {
+                console.log("inside drawPoint function now...");
+                var geometry, material, point;
+
+                geometry = new THREE.Geometry();
+
+                geometry.vertices.push(new THREE.Vector3(entity.position.x, entity.position.y, entity.position.z));
+
+                // TODO: could be more efficient. PointCloud per layer?
+
+                var numPoints = 1;
+
+                var color = getColor(entity, data);
+                var colors = new Float32Array(numPoints * 3);
+                colors[0] = color.r;
+                colors[1] = color.g;
+                colors[2] = color.b;
+
+                geometry.colors = colors;
+                geometry.computeBoundingBox();
+
+                material = new THREE.PointCloudMaterial({
+                    size: 0.05,
+                    vertexColors: THREE.VertexColors
+                });
+                point = new THREE.PointCloud(geometry, material);
+
+                //point.translateX(laserxmax /2 * -1);
+                //point.translateY(laserymax /2 * -1);
+
+                this.sceneAdd(point);
+            },
+
+            //function getColor(entity, data) {
+            //  var color = entity.color || data.tables.layers[entity.layer].color;
+            //  if(color === 0xffffff) {
+            //    color = 0x000000;
+            //  }
+            //  return color;
+            //}
+
+            getColor: function(entity, data) {
+                //  var color = entity.color || data.tables.layers[entity.layer].color;
+                //  if(color === 0xffffff) {
+                //    color = 0x000000;
+                //  }
+                return 0x000099;
+            },
+
+
+            createLineTypeShaders: function(data) {
+                var ltype, type;
+                var ltypes = data.tables.lineTypes;
+
+                for (type in ltypes) {
+                    ltype = ltypes[type];
+                    if (!ltype.pattern) continue;
+                    ltype.material = createDashedLineShader(ltype.pattern);
+                }
+            },
+
+            createDashedLineShader: function(pattern) {
+                var i,
+                    dashedLineShader = {},
+                    totalLength = 0.0;
+
+                for (i = 0; i < pattern.length; i++) {
+                    totalLength += Math.abs(pattern[i]);
+                }
+
+                dashedLineShader.uniforms = THREE.UniformsUtils.merge([
+
+                    THREE.UniformsLib['common'],
+                    THREE.UniformsLib['fog'],
+
+                    {
+                        'pattern': {
+                            type: 'fv1',
+                            value: pattern
+                        },
+                        'patternLength': {
+                            type: 'f',
+                            value: totalLength
+                        }
+                    }
+
+                ]);
+
+                dashedLineShader.vertexShader = [
+                    'attribute float lineDistance;',
+
+                    'varying float vLineDistance;',
+
+                    THREE.ShaderChunk['color_pars_vertex'],
+
+                    'void main() {',
+
+                    THREE.ShaderChunk['color_vertex'],
+
+                    'vLineDistance = lineDistance;',
+
+                    'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+
+                    '}'
+                ].join('\n');
+
+                dashedLineShader.fragmentShader = [
+                    'uniform vec3 diffuse;',
+                    'uniform float opacity;',
+
+                    'uniform float pattern[' + pattern.length + '];',
+                    'uniform float patternLength;',
+
+                    'varying float vLineDistance;',
+
+                    THREE.ShaderChunk['color_pars_fragment'],
+                    THREE.ShaderChunk['fog_pars_fragment'],
+
+                    'void main() {',
+
+                    'float pos = mod(vLineDistance, patternLength);',
+
+                    'for ( int i = 0; i < ' + pattern.length + '; i++ ) {',
+                    'pos = pos - abs(pattern[i]);',
+                    'if( pos < 0.0 ) {',
+                    'if( pattern[i] > 0.0 ) {',
+                    'gl_FragColor = vec4(1.0, 0.0, 0.0, opacity );',
+                    'break;',
+                    '}',
+                    'discard;',
+                    '}',
+
+                    '}',
+
+                    THREE.ShaderChunk['color_fragment'],
+                    THREE.ShaderChunk['fog_fragment'],
+
+                    '}'
+                ].join('\n');
+
+                return dashedLineShader;
+            },
+
+        
+
             
-            if (file) {
-                
-                // make sure this file is an Eagle board
-                //if (!(file.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i))) {
-                //    chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Error Loading Eagle BRD", "It looks like you had a previous Eagle BRD, but it doesn't seem to be the correct format.", 10 * 1000);
-                //    return;
-                //               
-                //}
-
-                chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Opening DXF", "Parsing DXF file.", 3000, true);
-                // reset main properties
-                //this.activeLayer = 'Top';
-                //this.clearEagleBrd();
-                this.clear3dViewer();
-                
-                // create board
-                //this.eagle = new EagleCanvas('eagle-canvas');
-                //this.eagle.loadText(file);
-                //this.eagle.setScaleToFit('eagle-main');
-                //this.eagle.setScale(this.eagle.getScale() / 2);
-                //this.eagle.draw();
-                //var that = this;
-                //this.draw3d(function() {
-                //    console.log("got callback from draw3d");
-                //}
-                //);
-                //var parser2 = new DxfParser();
-                //var dxf2 = DxfParser.parseSync(file);
-                var dxf2 = this.dxfParser.parseSync(file);
-                console.log("Setup DXFParser. dxf2:", dxf2);
-			   //cadCanvas = new this.processDXF(dxf2);
-                
-                $('#com-chilipeppr-widget-dxf .btn-dxf-sendgcodetows').prop('disabled', false);
-            } else {
-                console.log("no last file, so not opening");
-            }
-        },
-
-    }
-});
-
-    
-    
+         open: function(data, info) {
+ 
+         // if we are passed the file data, then use that, otherwise look to 
+         // see if we had one saved from before, i.e. this is a browser reload scenario
+         // and we'd like to show them their recent Eagle BRD
+         var file;
+         if (data) {
+             console.log("open. loading from passed in data. data.length:", data.length, "info:", info);
+             file = data;
+             this.fileInfo = info;
+             $('#com-chilipeppr-widget-dxf .dxf-draghere').addClass("hidden");
+         }
+         else {
+ 
+             // try to retrieve the most recent board file
+             file = localStorage.getItem('com-chilipeppr-widget-dxf-lastDropped');
+             if (file && file.length > 0) {
+                 this.fileInfo = localStorage.getItem('com-chilipeppr-widget-dxf-lastDropped-info');
+                 if (this.fileInfo && this.fileInfo.match(/^{/)) {
+                     this.fileInfo = JSON.parse(this.fileInfo);
+                 }
+                 console.log("open. loading data from localStorage. file.length:", file.length, "info:", this.fileInfo);
+             }
+             else {
+                 // there's no file, just return
+                 return;
+             }
+ 
+         }
+ 
+         if (file) {
+ 
+             // make sure this file is an Eagle board
+             //if (!(file.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i))) {
+             //    chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Error Loading Eagle BRD", "It looks like you had a previous Eagle BRD, but it doesn't seem to be the correct format.", 10 * 1000);
+             //    return;
+             //               
+             //}
+ 
+             chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Opening DXF", "Parsing DXF file.", 3000, true);
+             // reset main properties
+             //this.activeLayer = 'Top';
+             //this.clearEagleBrd();
+             this.clear3dViewer();
+ 
+             // create board
+             //this.eagle = new EagleCanvas('eagle-canvas');
+             //this.eagle.loadText(file);
+             //this.eagle.setScaleToFit('eagle-main');
+             //this.eagle.setScale(this.eagle.getScale() / 2);
+             //this.eagle.draw();
+             //var that = this;
+             //this.draw3d(function() {
+             //    console.log("got callback from draw3d");
+             //}
+             //);
+             //var parser2 = new DxfParser();
+             //var dxf2 = DxfParser.parseSync(file);
+             var dxf2 = this.dxfParser.parseSync(file);
+             console.log("Setup DXFParser. dxf2:", dxf2);
+             //var cadCanvas = new processDXF(dxf2);
+             processDXF(dxf2);
+             //console.log("DXF cadCanvas:", cadCanvas);
+ 
+             $('#com-chilipeppr-widget-dxf .btn-dxf-sendgcodetows').prop('disabled', false);
+         }
+         else {
+             console.log("no last file, so not opening");
+         }
+     },
+ 
+ }
+ });
+ 
