@@ -657,6 +657,8 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                     //console.log("Running drawEntity for ", entity, " which is ", data);
                 }
             }
+            
+            chilipeppr.publish("/com-chilipeppr-widget-3dviewer/viewextents");
         },  
 
             drawEntity: function(entity, data) {
