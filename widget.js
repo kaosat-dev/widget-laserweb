@@ -813,7 +813,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
 
 
                 material = new THREE.MeshBasicMaterial({
-                    color: getColor(entity, data)
+                    color: this.getColor(entity, data)
                 });
 
                 mesh = new THREE.Mesh(geometry, material);
@@ -835,7 +835,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 });
 
                 material = new THREE.MeshBasicMaterial({
-                    color: getColor(entity, data)
+                    color: this.getColor(entity, data)
                 });
 
                 text = new THREE.Mesh(geometry, material);
