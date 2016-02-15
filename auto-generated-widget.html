@@ -939,7 +939,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 for (type in ltypes) {
                     ltype = ltypes[type];
                     if (!ltype.pattern) continue;
-                    ltype.material = createDashedLineShader(ltype.pattern);
+                    ltype.material = this.createDashedLineShader(ltype.pattern);
                 }
             },
 
