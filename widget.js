@@ -227,6 +227,8 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             this.setupUiFromLocalStorage();
             this.btnSetup();
             this.forkSetup();
+            
+            this.init3d();
 
             console.log("DXF Widget finished init");
 
@@ -446,7 +448,8 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         onDropped: function(data, info) {
             console.log("DXF onDropped. len of file:", data.length, "info:", info);
             console.log('DXF Widget: We did do OnDropped...');
-            chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dropped in a DXF ", 1000);
+            //chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Loaded", "Looks like you dropped in a DXF ", 1000);
+            console.log("Looks like you dropped in a DXF");
             // we have the data
             // double check it's a board file, cuz it could be gcode
             //if (data.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i)) {
@@ -473,7 +476,8 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             //} else {
             if (info.name.match(/.dxf$/i)) {
                 // this looks like an Eagle brd file, but it's binary
-                chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Found", "File matched as *.dxf ", 1000);
+                //chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "DXF Found", "File matched as *.dxf ", 1000);
+                console.log("file name does match *.dxf");
                 this.open(data, info);
                 return false;
             }
@@ -501,6 +505,79 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             */
             this.is3dViewerReady = true;
         },
+        
+          init3d: function () {
+            this.get3dObj();
+            if (this.obj3d == null) {
+                console.log("loading 3d scene failed, try again in 1 second");
+                var attempts = 1;
+                var that = this;
+                setTimeout(function () {
+                    that.get3dObj();
+                    if (that.obj3d == null) {
+                        attempts++;
+                        setTimeout(function () {
+                            that.get3dObj();
+                            if (that.obj3d == null) {
+                                console.log("giving up on trying to get 3d");
+                            } else {
+                                console.log("succeeded on getting 3d after attempts:", attempts);
+                                that.onInit3dSuccess();
+                            }
+                        }, 5000);
+                    } else {
+                        console.log("succeeded on getting 3d after attempts:", attempts);
+                        that.onInit3dSuccess();
+                    }
+                }, 1000);
+            } else {
+                this.onInit3dSuccess();
+            }
+
+        },
+        onInit3dSuccess: function () {
+            console.log("onInit3dSuccess. That means we finally got an object back.");
+            this.clear3dViewer();
+            
+            // open the last file
+            var that = this;
+            //setTimeout(function () {
+                that.open();
+            //}, 1000);
+        },
+        obj3d: null, // gets the 3dviewer obj stored in here on callback
+        obj3dmeta: null, // gets metadata for 3dviewer
+        userCallbackForGet3dObj: null,
+        get3dObj: function (callback) {
+            this.userCallbackForGet3dObj = callback;
+            chilipeppr.subscribe("/com-chilipeppr-widget-3dviewer/recv3dObject", this, this.get3dObjCallback);
+            chilipeppr.publish("/com-chilipeppr-widget-3dviewer/request3dObject", "");
+            chilipeppr.unsubscribe("/com-chilipeppr-widget-3dviewer/recv3dObject", this.get3dObjCallback);
+        },
+        get3dObjCallback: function (data, meta) {
+            console.log("got 3d obj:", data, meta);
+            this.obj3d = data;
+            this.obj3dmeta = meta;
+            if (this.userCallbackForGet3dObj) {
+                //setTimeout(this.userCallbackForGet3dObj.bind(this), 200);
+                //console.log("going to call callback after getting back the new 3dobj. this.userCallbackForGet3dObj:", this.userCallbackForGet3dObj);
+                this.userCallbackForGet3dObj();
+                this.userCallbackForGet3dObj = null;
+            }
+        },
+        is3dViewerReady: false,
+        clear3dViewer: function () {
+            console.log("clearing 3d viewer");
+            chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneclear");
+            //if (this.obj3d) this.obj3d.children = [];            
+            /*
+            this.obj3d.children.forEach(function(obj3d) {
+                chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneremove", obj3d);
+            });
+            */
+            this.is3dViewerReady = true;
+        },
+        
         dxf: null,
         cadCanvas: null,
         mySceneGroup: null,
@@ -517,6 +594,8 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             this.obj3dmeta.widget.wakeAnimate();
         },
         sceneAdd: function (obj) {
+            console.log("InsideScene Add :", obj);
+            chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneadd", obj);
             //chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneadd", obj);
             
             // this method of adding puts us in the object that contains rendered Gcode
@@ -525,12 +604,12 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             //this.obj3d.add(obj);
             
             // let's add our Eagle BRD content outside the scope of the Gcode content
-            // so that we have it stay while the Gcode 3D Viewer still functions
-            if (this.mySceneGroup == null) {
-                this.mySceneGroup = new THREE.Group();
-                this.obj3d.add(this.mySceneGroup);
-            }
-            this.mySceneGroup.add(obj);
+            // // so that we have it stay while the Gcode 3D Viewer still functions
+            //if (this.mySceneGroup == null) {
+            //   this.mySceneGroup = new THREE.Group();
+            //   this.obj3d.add(this.mySceneGroup);
+            //    }
+            //  this.mySceneGroup.add(obj);
             //this.obj3dmeta.scene.add(obj);
             
             this.obj3dmeta.widget.wakeAnimate();
@@ -544,80 +623,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             this.obj3dmeta.widget.wakeAnimate();
         },
         
-        /**
-         * Calculates points for a curve between two points
-         * @param startPoint - the starting point of the curve
-         * @param endPoint - the ending point of the curve
-         * @param bulge - a value indicating how much to curve
-         * @param segments - number of segments between the two given points
-         */
-         THREEMathangle2: function(p1, p2) {
-             var v1 = new THREE.Vector2(p1.x, p1.y);
-             var v2 = new THREE.Vector2(p2.x, p2.y);
-             v2.sub(v1); // sets v2 to be our chord
-             v2.normalize(); // normalize because cos(theta) =
-             // if(v2.y < 0) return Math.PI + (Math.PI - Math.acos(v2.x));
-             if (v2.y < 0) return -Math.acos(v2.x);
-             return Math.acos(v2.x);
-         },
          
-         
-         THREEMathpolar: function(point, distance, angle) {
-             var result = {};
-             result.x = point.x + distance * Math.cos(angle);
-             result.y = point.y + distance * Math.sin(angle);
-             return result;
-         },/**
-          * Calculates points for a curve between two points
-          * @param startPoint - the starting point of the curve
-          * @param endPoint - the ending point of the curve
-          * @param bulge - a value indicating how much to curve
-          * @param segments - number of segments between the two given points
-          */
-         THREEBulgeGeometry: function(startPoint, endPoint, bulge, segments) {
-         
-                 var vertex, i,
-                     center, p0, p1, angle,
-                     radius, startAngle,
-                     thetaAngle;
-         
-                 THREE.Geometry.call(this);
-         
-                 this.startPoint = p0 = startPoint ? new THREE.Vector2(startPoint.x, startPoint.y) : new THREE.Vector2(0, 0);
-                 this.endPoint = p1 = endPoint ? new THREE.Vector2(endPoint.x, endPoint.y) : new THREE.Vector2(1, 0);
-                 this.bulge = bulge = bulge || 1;
-         
-                 angle = 4 * Math.atan(bulge);
-                 radius = p0.distanceTo(p1) / 2 / Math.sin(angle / 2);
-                 center = THREEMathpolar(startPoint, radius, THREEMathangle2(p0, p1) + (Math.PI / 2 - angle / 2));
-         
-                 this.segments = segments = segments || Math.max(Math.abs(Math.ceil(angle / (Math.PI / 18))), 6); // By default want a segment roughly every 10 degrees
-                 startAngle = THREEMathangle2(center, p0);
-                 thetaAngle = angle / segments;
-         
-         
-                 this.vertices.push(new THREE.Vector3(p0.x, p0.y, 0));
-         
-                 for (i = 1; i <= segments - 1; i++) {
-         
-                     vertex = THREEMathpolar(center, Math.abs(radius), startAngle + thetaAngle * i);
-         
-                     this.vertices.push(new THREE.Vector3(vertex.x, vertex.y, 0));
-         
-                 }
-         
-             },
-         
-             //THREEBulgeGeometryprototype = Object.create(THREE.Geometry.prototype),
-         
-             /**
-              * Viewer class for a dxf object.
-              * @param {Object} data - the dxf object
-              * @param {Number} width - width of the rendering canvas in pixels
-              * @param {Number} height - height of the rendering canvas in pixels
-              * @constructor
-              */
-              
               
         /**
         * Viewer class for a dxf object.*
@@ -638,7 +644,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                     if (entity.block) {
                         var block = data.blocks[entity.block];
                         for (j = 0; j < block.entities.length; j++) {
-                            drawEntity(block.entities[j], data);
+                           this.drawEntity(block.entities[j], data);
                             //console.log('Sending DXF data to drawEntity function...');
                         }
                     }
@@ -647,7 +653,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                     }
                 }
                 else {
-                    drawEntity(entity, data);
+                    this.drawEntity(entity, data);
                     //console.log("Running drawEntity for ", entity, " which is ", data);
                 }
             }
@@ -657,25 +663,25 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 console.log("inside drawEntity function now to process Entity: ", entity);
 
                 if (entity.type === 'CIRCLE' || entity.type === 'ARC') {
-                    drawCircle(entity, data);
+                    this.drawCircle(entity, data);
                 }
                 else if (entity.type === 'LWPOLYLINE' || entity.type === 'LWPOLYLINE' || entity.type === 'LINE') {
-                    drawLine(entity, data);
+                    this.drawLine(entity, data);
                 }
                 else if (entity.type === 'TEXT') {
-                    drawText(entity, data);
+                    this.drawText(entity, data);
                 }
                 else if (entity.type === 'SOLID') {
-                    drawSolid(entity, data);
+                    this.drawSolid(entity, data);
                 }
                 else if (entity.type === 'POINT') {
-                    drawPoint(entity, data);
+                    this.drawPoint(entity, data);
                 }
             },
 
             drawLine: function(entity, data) {
                 var geometry = new THREE.Geometry(),
-                    color = getColor(entity, data),
+                    color = this.getColor(entity, data),
                     material, lineType, vertex, startPoint, endPoint, bulgeGeometry,
                     bulge, i, line;
 
@@ -740,6 +746,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //line.translateX(laserxmax /2 * -1);
                 //line.translateY(laserymax /2 * -1);
                 this.sceneAdd(line);
+                console.log("Scene Add Line ");
             },
 
             drawCircle: function(entity, data) {
@@ -763,7 +770,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 geometry.vertices.shift();
 
                 material = new THREE.LineBasicMaterial({
-                    color: getColor(entity, data)
+                    color: this.getColor(entity, data)
                 });
 
                 circle = new THREE.Line(geometry, material);
@@ -773,6 +780,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //circle.translateX(laserxmax /2 * -1);
                 //circle.translateY(laserymax /2 * -1);
                 this.sceneAdd(circle);
+                console.log("Scene Add Circle");
             },
 
             drawSolid: function(entity, data) {
@@ -814,6 +822,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //mesh.translateY(laserymax /2 * -1);
 
                 this.sceneAdd(mesh);
+                console.log("Scene Add Mesh");
             },
 
             drawText: function(entity, data) {
@@ -838,6 +847,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //text.translateY(laserymax /2 * -1);
 
                 this.sceneAdd(text);
+                console.log("Scene Add Mesh");
             },
 
             drawPoint: function(entity, data) {
@@ -871,6 +881,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 //point.translateY(laserymax /2 * -1);
 
                 this.sceneAdd(point);
+                console.log("Scene Add Point");
             },
 
             //function getColor(entity, data) {
@@ -1025,7 +1036,8 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
              //               
              //}
  
-             chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Opening DXF", "Parsing DXF file.", 3000, true);
+             //chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Opening DXF", "Parsing DXF file.", 3000, true);
+             console.log("Parsing the DXF");
              // reset main properties
              //this.activeLayer = 'Top';
              //this.clearEagleBrd();
@@ -1047,7 +1059,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
              var dxf2 = this.dxfParser.parseSync(file);
              console.log("Setup DXFParser. dxf2:", dxf2);
              //var cadCanvas = new processDXF(dxf2);
-             processDXF(dxf2);
+             this.processDXF(dxf2);
              //console.log("DXF cadCanvas:", cadCanvas);
  
              $('#com-chilipeppr-widget-dxf .btn-dxf-sendgcodetows').prop('disabled', false);
