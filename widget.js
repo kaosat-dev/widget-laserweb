@@ -7,17 +7,17 @@ requirejs.config({
     /*
     Dependencies can be defined here. ChiliPeppr uses require.js so
     please refer to http://requirejs.org/docs/api.html for info.
-    
+
     Most widgets will not need to define Javascript dependencies.
-    
+
     Make sure all URLs are https and http accessible. Try to use URLs
     that start with // rather than http:// or https:// so they simply
     use whatever method the main page uses.
-    
+
     Also, please make sure you are not loading dependencies from different
     URLs that other widgets may already load like jquery, bootstrap,
     three.js, etc.
-    
+
     You may slingshot content through ChiliPeppr's proxy URL if you desire
     to enable SSL for non-SSL URL's. ChiliPeppr's SSL URL is
     https://i2dcui.appspot.com which is the SSL equivalent for
@@ -204,7 +204,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
 
             console.log("DXF Widget starting init.");
 
-            // Addind debug 
+            // Addind debug
             console.log("our DXF obj is alive: ", mydxf); //ThreeDxf);
             var parser = new mydxf();
             console.log("DXF parser:", parser);
@@ -227,7 +227,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             this.setupUiFromLocalStorage();
             this.btnSetup();
             this.forkSetup();
-            
+
             this.init3d();
 
             console.log("DXF Widget finished init");
@@ -235,7 +235,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         },
         /**
          * Call this method from init to setup all the buttons when this widget
-         * is first loaded. This basically attaches click events to your 
+         * is first loaded. This basically attaches click events to your
          * buttons. It also turns on all the bootstrap popovers by scanning
          * the entire DOM of the widget.
          */
@@ -268,7 +268,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             // Init Say Hello Button on Main Toolbar
             // We are inlining an anonymous method as the callback here
             // as opposed to a full callback method in the Hello Word 2
-            // example further below. Notice we have to use "that" so 
+            // example further below. Notice we have to use "that" so
             // that the this is set correctly inside the anonymous method
             $('#' + this.id + ' .btn-sayhello').click(function() {
                 console.log("saying hello");
@@ -321,7 +321,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             // widgets' options. By using this.id as the prefix of the
             // key we're safe that this will be unique.
 
-            // Feel free to add your own keys inside the options 
+            // Feel free to add your own keys inside the options
             // object for your own items
 
             var options = localStorage.getItem(this.id + '-options');
@@ -368,10 +368,10 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         },
         /**
          * Show the body of the panel.
-         * @param {jquery_event} evt - If you pass the event parameter in, we 
-         * know it was clicked by the user and thus we store it for the next 
-         * load so we can reset the user's preference. If you don't pass this 
-         * value in we don't store the preference because it was likely code 
+         * @param {jquery_event} evt - If you pass the event parameter in, we
+         * know it was clicked by the user and thus we store it for the next
+         * load so we can reset the user's preference. If you don't pass this
+         * value in we don't store the preference because it was likely code
          * that sent in the param.
          */
         showBody: function(evt) {
@@ -386,10 +386,10 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         },
         /**
          * Hide the body of the panel.
-         * @param {jquery_event} evt - If you pass the event parameter in, we 
-         * know it was clicked by the user and thus we store it for the next 
-         * load so we can reset the user's preference. If you don't pass this 
-         * value in we don't store the preference because it was likely code 
+         * @param {jquery_event} evt - If you pass the event parameter in, we
+         * know it was clicked by the user and thus we store it for the next
+         * load so we can reset the user's preference. If you don't pass this
+         * value in we don't store the preference because it was likely code
          * that sent in the param.
          */
         hideBody: function(evt) {
@@ -403,11 +403,11 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             }
         },
         /**
-         * This method loads the pubsubviewer widget which attaches to our 
+         * This method loads the pubsubviewer widget which attaches to our
          * upper right corner triangle menu and generates 3 menu items like
          * Pubsub Viewer, View Standalone, and Fork Widget. It also enables
          * the modal dialog that shows the documentation for this widget.
-         * 
+         *
          * By using chilipeppr.load() we can ensure that the pubsubviewer widget
          * is only loaded and inlined once into the final ChiliPeppr workspace.
          * We are given back a reference to the instantiated singleton so its
@@ -497,7 +497,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         clear3dViewer: function() {
             console.log("clearing 3d viewer");
             chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneclear");
-            //if (this.obj3d) this.obj3d.children = [];            
+            //if (this.obj3d) this.obj3d.children = [];
             /*
             this.obj3d.children.forEach(function(obj3d) {
                 chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneremove", obj3d);
@@ -505,7 +505,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             */
             this.is3dViewerReady = true;
         },
-        
+
           init3d: function () {
             this.get3dObj();
             if (this.obj3d == null) {
@@ -538,7 +538,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         onInit3dSuccess: function () {
             console.log("onInit3dSuccess. That means we finally got an object back.");
             this.clear3dViewer();
-            
+
             // open the last file
             var that = this;
             //setTimeout(function () {
@@ -569,7 +569,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
         clear3dViewer: function () {
             console.log("clearing 3d viewer");
             chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneclear");
-            //if (this.obj3d) this.obj3d.children = [];            
+            //if (this.obj3d) this.obj3d.children = [];
             /*
             this.obj3d.children.forEach(function(obj3d) {
                 chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneremove", obj3d);
@@ -577,7 +577,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             */
             this.is3dViewerReady = true;
         },
-        
+
         dxf: null,
         cadCanvas: null,
         mySceneGroup: null,
@@ -597,12 +597,12 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             console.log("InsideScene Add :", obj);
             chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneadd", obj);
             //chilipeppr.publish("/com-chilipeppr-widget-3dviewer/sceneadd", obj);
-            
+
             // this method of adding puts us in the object that contains rendered Gcode
             // that's one option, but when we send gcode to workspace we get overwritten
             // then
             //this.obj3d.add(obj);
-            
+
             // let's add our Eagle BRD content outside the scope of the Gcode content
             // // so that we have it stay while the Gcode 3D Viewer still functions
             //if (this.mySceneGroup == null) {
@@ -611,7 +611,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
             //    }
             //  this.mySceneGroup.add(obj);
             //this.obj3dmeta.scene.add(obj);
-            
+
             this.obj3dmeta.widget.wakeAnimate();
         },
         sceneRemove: function (obj) {
@@ -622,19 +622,19 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 this.mySceneGroup.remove(obj);
             this.obj3dmeta.widget.wakeAnimate();
         },
-        
-         
-              
+
+
+
         /**
         * Viewer class for a dxf object.*
-        * @param {Object} data - the dxf object 
-        * @param {number} width - width of the rendering canvas in pixels 
-        * @param {Number } height - height of the rendering canvas in pixels 
+        * @param {Object} data - the dxf object
+        * @param {number} width - width of the rendering canvas in pixels
+        * @param {Number } height - height of the rendering canvas in pixels
         * @constructor */
 
         processDXF: function(data) {
             console.log("Inside Processdxf: ", data);
-            //console.log(" If I am right this is the one running now - from renderer.js pulled in via requirejs "); // want to see it clearly 
+            //console.log(" If I am right this is the one running now - from renderer.js pulled in via requirejs "); // want to see it clearly
             var i, entity;
 
             for (i = 0; i < data.entities.length; i++) {
@@ -657,7 +657,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                     //console.log("Running drawEntity for ", entity, " which is ", data);
                 }
             }
-        },  
+        },
 
             drawEntity: function(entity, data) {
                 console.log("inside drawEntity function now to process Entity: ", entity);
@@ -678,228 +678,6 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                     this.drawPoint(entity, data);
                 }
             },
-
-            drawLine: function(entity, data) {
-                var geometry = new THREE.Geometry(),
-                    color = this.getColor(entity, data),
-                    material, lineType, vertex, startPoint, endPoint, bulgeGeometry,
-                    bulge, i, line;
-
-                // create geometry
-                for (i = 0; i < entity.vertices.length; i++) {
-
-                    if (entity.vertices[i].bulge) {
-                        bulge = entity.vertices[i].bulge;
-                        startPoint = entity.vertices[i];
-                        endPoint = i + 1 < entity.vertices.length ? entity.vertices[i + 1] : geometry.vertices[0];
-
-                        bulgeGeometry = new THREE.BulgeGeometry(startPoint, endPoint, bulge);
-
-                        geometry.vertices.push.apply(geometry.vertices, bulgeGeometry.vertices);
-                    }
-                    else {
-                        vertex = entity.vertices[i];
-                        geometry.vertices.push(new THREE.Vector3(vertex.x, vertex.y, 0));
-                    }
-
-                }
-                if (entity.shape) geometry.vertices.push(geometry.vertices[0]);
-
-
-                // set material
-                //if(entity.lineType) {
-                //  lineType = data.tables.lineTypes[entity.lineType];
-                //}
-
-                if (lineType && lineType.pattern && lineType.pattern.length !== 0) {
-                    material = new THREE.LineDashedMaterial({
-                        color: color,
-                        gapSize: 4,
-                        dashSize: 4
-                    });
-                }
-                else {
-                    material = new THREE.LineBasicMaterial({
-                        linewidth: 1,
-                        color: color
-                    });
-                }
-
-                // if(lineType && lineType.pattern && lineType.pattern.length !== 0) {
-
-                //           geometry.computeLineDistances();
-
-                //           // Ugly hack to add diffuse to this. Maybe copy the uniforms object so we
-                //           // don't add diffuse to a material.
-                //           lineType.material.uniforms.diffuse = { type: 'c', value: new THREE.Color(color) };
-
-                // 	material = new THREE.ShaderMaterial({
-                // 		uniforms: lineType.material.uniforms,
-                // 		vertexShader: lineType.material.vertexShader,
-                // 		fragmentShader: lineType.material.fragmentShader
-                // 	});
-                // }else {
-                // 	material = new THREE.LineBasicMaterial({ linewidth: 1, color: color });
-                // }
-
-                line = new THREE.Line(geometry, material);
-                //line.translateX(laserxmax /2 * -1);
-                //line.translateY(laserymax /2 * -1);
-                this.sceneAdd(line);
-                console.log("Scene Add Line ");
-            },
-
-            drawCircle: function(entity, data) {
-
-                // Laserweb - calc and draw gcode
-                var radius = entity.radius;
-                console.log('Radius:' + radius + ' and Center ' + entity.center.x + ',' + entity.center.y + ',' + entity.center.z + ',\n'); // Radius:220 and Center 0,0,0,
-                var arcTotalDeg = entity.startAngleDeg - entity.endAngleDeg;
-                console.log('Start Angle: ' + entity.startAngleDeg + ', End Angle: ' + entity.endAngleDeg + ', thus spanning ' + arcTotalDeg + 'deg');
-
-                // Do some math here, to determine starting point (using center, Radius and start angle?)
-                // Do some math here, to determine starting point (using  center, Radius and End angle?)
-                // Do some math here, to draw line segments (sections spaced radius away from center, from start point to end point (lengh of segment is number of segments divide by arcTotalDeg)?)
-                // Write that to GCODE
-                // end Laserweb
-
-                // Draw it since its cool to see (note this is a straigh three.js view of it, not via gcode.  Can be used in the Cutting Params view by coloring object/layers to change params)
-                var geometry, material, circle;
-
-                geometry = new THREE.CircleGeometry(entity.radius, 32, entity.startAngle, entity.angleLength);
-                geometry.vertices.shift();
-
-                material = new THREE.LineBasicMaterial({
-                    color: this.getColor(entity, data)
-                });
-
-                circle = new THREE.Line(geometry, material);
-                circle.position.x = entity.center.x;
-                circle.position.y = entity.center.y;
-                circle.position.z = entity.center.z;
-                //circle.translateX(laserxmax /2 * -1);
-                //circle.translateY(laserymax /2 * -1);
-                this.sceneAdd(circle);
-                console.log("Scene Add Circle");
-            },
-
-            drawSolid: function(entity, data) {
-                console.log("inside drawSolid function now...");
-                var material, mesh, solid, verts;
-                geometry = new THREE.Geometry();
-
-                verts = geometry.vertices;
-                verts.push(new THREE.Vector3(entity.points[0].x, entity.points[0].y, entity.points[0].z));
-                verts.push(new THREE.Vector3(entity.points[1].x, entity.points[1].y, entity.points[1].z));
-                verts.push(new THREE.Vector3(entity.points[2].x, entity.points[2].y, entity.points[2].z));
-                verts.push(new THREE.Vector3(entity.points[3].x, entity.points[3].y, entity.points[3].z));
-
-                // Calculate which direction the points are facing (clockwise or counter-clockwise)
-                var vector1 = new THREE.Vector3();
-                var vector2 = new THREE.Vector3();
-                vector1.subVectors(verts[1], verts[0]);
-                vector2.subVectors(verts[2], verts[0]);
-                vector1.cross(vector2);
-
-                // If z < 0 then we must draw these in reverse order
-                if (vector1.z < 0) {
-                    geometry.faces.push(new THREE.Face3(2, 1, 0));
-                    geometry.faces.push(new THREE.Face3(2, 3, 0));
-                }
-                else {
-                    geometry.faces.push(new THREE.Face3(0, 1, 2));
-                    geometry.faces.push(new THREE.Face3(0, 3, 2));
-                }
-
-
-                material = new THREE.MeshBasicMaterial({
-                    color: this.getColor(entity, data)
-                });
-
-                mesh = new THREE.Mesh(geometry, material);
-
-                //mesh.translateX(laserxmax /2 * -1);
-                //mesh.translateY(laserymax /2 * -1);
-
-                this.sceneAdd(mesh);
-                console.log("Scene Add Mesh");
-            },
-
-            drawText: function(entity, data) {
-                console.log("inside drawText function now...");
-                var geometry, material, text;
-
-                geometry = new THREE.TextGeometry(entity.text, {
-                    height: 0,
-                    size: entity.textHeight || 12
-                });
-
-                material = new THREE.MeshBasicMaterial({
-                    color: this.getColor(entity, data)
-                });
-
-                text = new THREE.Mesh(geometry, material);
-                text.position.x = entity.startPoint.x;
-                text.position.y = entity.startPoint.y;
-                text.position.z = entity.startPoint.z;
-
-                //text.translateX(laserxmax /2 * -1);
-                //text.translateY(laserymax /2 * -1);
-
-                this.sceneAdd(text);
-                console.log("Scene Add Mesh");
-            },
-
-            drawPoint: function(entity, data) {
-                console.log("inside drawPoint function now...");
-                var geometry, material, point;
-
-                geometry = new THREE.Geometry();
-
-                geometry.vertices.push(new THREE.Vector3(entity.position.x, entity.position.y, entity.position.z));
-
-                // TODO: could be more efficient. PointCloud per layer?
-
-                var numPoints = 1;
-
-                var color = this.getColor(entity, data);
-                var colors = new Float32Array(numPoints * 3);
-                colors[0] = color.r;
-                colors[1] = color.g;
-                colors[2] = color.b;
-
-                geometry.colors = colors;
-                geometry.computeBoundingBox();
-
-                material = new THREE.PointCloudMaterial({
-                    size: 0.05,
-                    vertexColors: THREE.VertexColors
-                });
-                point = new THREE.PointCloud(geometry, material);
-
-                //point.translateX(laserxmax /2 * -1);
-                //point.translateY(laserymax /2 * -1);
-
-                this.sceneAdd(point);
-                console.log("Scene Add Point");
-            },
-
-            //function getColor(entity, data) {
-            //  var color = entity.color || data.tables.layers[entity.layer].color;
-            //  if(color === 0xffffff) {
-            //    color = 0x000000;
-            //  }
-            //  return color;
-            //}
-
-            getColor: function(entity, data) {
-                //var color = entity.color || data.tables.layers[entity.layer].color;
-                //  if(color === 0xffffff) {
-                //    color = 0x000000;
-                //}
-                return 0x000099;
-            },
-
 
             createLineTypeShaders: function(data) {
                 var ltype, type;
@@ -994,12 +772,12 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                 return dashedLineShader;
             },
 
-        
 
-            
+
+
          open: function(data, info) {
- 
-         // if we are passed the file data, then use that, otherwise look to 
+
+         // if we are passed the file data, then use that, otherwise look to
          // see if we had one saved from before, i.e. this is a browser reload scenario
          // and we'd like to show them their recent Eagle BRD
          var file;
@@ -1010,7 +788,7 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
              $('#com-chilipeppr-widget-dxf .dxf-draghere').addClass("hidden");
          }
          else {
- 
+
              // try to retrieve the most recent board file
              file = localStorage.getItem('com-chilipeppr-widget-dxf-lastDropped');
              if (file && file.length > 0) {
@@ -1024,28 +802,28 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
                  // there's no file, just return
                  return;
              }
- 
+
          }
- 
+
          if (file) {
- 
+
              // make sure this file is an Eagle board
              //if (!(file.match(/<!DOCTYPE eagle SYSTEM "eagle.dtd">/i))) {
              //    chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Error Loading Eagle BRD", "It looks like you had a previous Eagle BRD, but it doesn't seem to be the correct format.", 10 * 1000);
              //    return;
-             //               
+             //
              //}
- 
+
              //chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Opening DXF", "Parsing DXF file.", 3000, true);
              console.log("Parsing the DXF");
              // reset main properties
              //this.activeLayer = 'Top';
              //this.clearEagleBrd();
              this.clear3dViewer();
-             
+
              //this.sceneRemoveMySceneGroup();  //ray testing some stuff
              //this.mySceneGroup = null;
-             
+
              // create board
              //this.eagle = new EagleCanvas('eagle-canvas');
              //this.eagle.loadText(file);
@@ -1064,14 +842,13 @@ cpdefine("inline:com-chilipeppr-widget-dxf", ["chilipeppr_ready", "Clipper", "jq
              //var cadCanvas = new processDXF(dxf2);
              this.processDXF(dxf2);
              //console.log("DXF cadCanvas:", cadCanvas);
- 
+
              $('#com-chilipeppr-widget-dxf .btn-dxf-sendgcodetows').prop('disabled', false);
          }
          else {
              console.log("no last file, so not opening");
          }
      },
- 
+
  }
  });
- 
